@@ -9,6 +9,12 @@ from .node.footprint import ProkitekturaFootprint,\
 
 from .node.facade import ProkitekturaFacade,\
     ProkitekturaSocketFootprint, ProkitekturaSocketLevelsDivs
+    
+from .node.div import ProkitekturaDiv
+from .node.level import ProkitekturaLevel
+from .node.basement import ProkitekturaBasement
+
+from .node.random_choice import ProkitekturaRandomChoice
 
 
 ### Node Categories ###
@@ -47,7 +53,11 @@ node_categories = [
     ProkitekturaNodeCategory('SOMENODES', "Some Nodes", items=[
         # our basic node
         NodeItem("ProkitekturaFootprint"),
-        NodeItem("ProkitekturaFacade")
+        NodeItem("ProkitekturaFacade"),
+        NodeItem("ProkitekturaDiv"),
+        NodeItem("ProkitekturaLevel"),
+        NodeItem("ProkitekturaBasement"),
+        NodeItem("ProkitekturaRandomChoice")
     ]),
     ProkitekturaNodeCategory('OTHERNODES', "Other Nodes", items=[
         # the node item can have additional settings,
@@ -80,7 +90,15 @@ classes = (
     ProkitekturaSocketFootprint,
     ProkitekturaSocketLevelsDivs,
     ProkitekturaSocketWallCladding,
-    ProkitekturaFacade
+    ProkitekturaFacade,
+    # Div
+    ProkitekturaDiv,
+    # Level
+    ProkitekturaLevel,
+    # Basement
+    ProkitekturaBasement,
+    # Random Choice
+    ProkitekturaRandomChoice
 )
 
 
