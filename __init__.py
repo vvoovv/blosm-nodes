@@ -16,6 +16,8 @@ from .node.basement import ProkitekturaBasement
 
 from .node.random_choice import ProkitekturaRandomChoice
 
+from .node.window import ProkitekturaWindow
+
 
 ### Node Categories ###
 # Node categories are a python system for automatically
@@ -50,7 +52,7 @@ class ProkitekturaNodeCategory(NodeCategory):
 # all categories in a list
 node_categories = [
     # identifier, label, items list
-    ProkitekturaNodeCategory('SOMENODES', "Some Nodes", items=[
+    ProkitekturaNodeCategory("BASEWINDOWS", "Base Nodes", items=[
         # our basic node
         NodeItem("ProkitekturaFootprint"),
         NodeItem("ProkitekturaFacade"),
@@ -59,19 +61,47 @@ node_categories = [
         NodeItem("ProkitekturaBasement"),
         NodeItem("ProkitekturaRandomChoice")
     ]),
-    ProkitekturaNodeCategory('OTHERNODES', "Other Nodes", items=[
+    ProkitekturaNodeCategory("WINDOWS", "Windows", items=[
         # the node item can have additional settings,
         # which are applied to new nodes
         # NB: settings values are stored as string expressions,
         # for this reason they should be converted to strings using repr()
-        NodeItem("ProkitekturaFootprint", label="Node A", settings={
-            "my_string_prop": repr("Lorem ipsum dolor sit amet"),
-            "my_float_prop": repr(1.0),
-        }),
-        NodeItem("ProkitekturaNode", label="Node B", settings={
-            "my_string_prop": repr("consectetur adipisicing elit"),
-            "my_float_prop": repr(2.0),
-        }),
+        NodeItem(
+            "ProkitekturaWindow",
+            label="2 panels 120x110",
+            settings = {
+                "width": repr(1.2),
+                "height": repr(1.1),
+                "panelsRow1": repr(2)
+            }
+        ),
+        NodeItem(
+            "ProkitekturaWindow",
+            label="3 panels 180x110",
+            settings = {
+                "width": repr(1.8),
+                "height": repr(1.1),
+                "panelsRow1": repr(3)
+            }
+        ),
+        NodeItem(
+            "ProkitekturaWindow",
+            label="2 panels 180x210",
+            settings = {
+                "width": repr(1.2),
+                "height": repr(1.1),
+                "panelsRow1": repr(2)
+            }
+        ),
+        NodeItem(
+            "ProkitekturaWindow",
+            label="3 panels 180x210",
+            settings = {
+                "width": repr(1.8),
+                "height": repr(1.1),
+                "panelsRow1": repr(3)
+            }
+        )
     ]),
 ]
 
@@ -98,7 +128,9 @@ classes = (
     # Basement
     ProkitekturaBasement,
     # Random Choice
-    ProkitekturaRandomChoice
+    ProkitekturaRandomChoice,
+    # Window
+    ProkitekturaWindow
 )
 
 
