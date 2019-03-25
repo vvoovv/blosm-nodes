@@ -18,6 +18,14 @@ from .node.random_choice import ProkitekturaRandomChoice
 
 from .node.window import ProkitekturaWindow
 
+from .node.balcony import ProkitekturaBalcony
+
+from .node.door import ProkitekturaDoor
+
+from .node.dormer import ProkitekturaDormer
+
+from .node.ridge import ProkitekturaRidge
+
 
 ### Node Categories ###
 # Node categories are a python system for automatically
@@ -52,14 +60,17 @@ class ProkitekturaNodeCategory(NodeCategory):
 # all categories in a list
 node_categories = [
     # identifier, label, items list
-    ProkitekturaNodeCategory("BASEWINDOWS", "Base Nodes", items=[
+    ProkitekturaNodeCategory("BASEITEMS", "Base Nodes", items=[
         # our basic node
         NodeItem("ProkitekturaFootprint"),
         NodeItem("ProkitekturaFacade"),
         NodeItem("ProkitekturaDiv"),
         NodeItem("ProkitekturaLevel"),
         NodeItem("ProkitekturaBasement"),
-        NodeItem("ProkitekturaRandomChoice")
+        NodeItem("ProkitekturaRandomChoice"),
+        NodeItem("ProkitekturaBalcony"),
+        NodeItem("ProkitekturaDormer"),
+        NodeItem("ProkitekturaRidge")
     ]),
     ProkitekturaNodeCategory("WINDOWS", "Windows", items=[
         # the node item can have additional settings,
@@ -103,6 +114,9 @@ node_categories = [
             }
         )
     ]),
+    ProkitekturaNodeCategory("DOORS", "Doors", items=[
+        NodeItem("ProkitekturaDoor")
+    ])
 ]
 
 
@@ -130,7 +144,15 @@ classes = (
     # Random Choice
     ProkitekturaRandomChoice,
     # Window
-    ProkitekturaWindow
+    ProkitekturaWindow,
+    # Balcony
+    ProkitekturaBalcony,
+    # Door
+    ProkitekturaDoor,
+    # Dormer
+    ProkitekturaDormer,
+    # Ridge
+    ProkitekturaRidge
 )
 
 
