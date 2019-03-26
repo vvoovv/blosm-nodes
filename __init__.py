@@ -12,6 +12,7 @@ from .node.facade import ProkitekturaFacade,\
     
 from .node.div import ProkitekturaDiv
 from .node.level import ProkitekturaLevel
+from .node.roof_side import ProkitekturaRoofSide
 from .node.basement import ProkitekturaBasement
 
 from .node.random_choice import ProkitekturaRandomChoice
@@ -25,6 +26,8 @@ from .node.door import ProkitekturaDoor
 from .node.dormer import ProkitekturaDormer
 
 from .node.ridge import ProkitekturaRidge
+
+from .node.chimney import ProkitekturaChimney
 
 
 ### Node Categories ###
@@ -66,11 +69,13 @@ node_categories = [
         NodeItem("ProkitekturaFacade"),
         NodeItem("ProkitekturaDiv"),
         NodeItem("ProkitekturaLevel"),
+        NodeItem("ProkitekturaRoofSide"),
         NodeItem("ProkitekturaBasement"),
         NodeItem("ProkitekturaRandomChoice"),
         NodeItem("ProkitekturaBalcony"),
         NodeItem("ProkitekturaDormer"),
-        NodeItem("ProkitekturaRidge")
+        NodeItem("ProkitekturaRidge"),
+        NodeItem("ProkitekturaChimney")
     ]),
     ProkitekturaNodeCategory("WINDOWS", "Windows", items=[
         # the node item can have additional settings,
@@ -139,6 +144,8 @@ classes = (
     ProkitekturaDiv,
     # Level
     ProkitekturaLevel,
+    # Roof Side
+    ProkitekturaRoofSide,
     # Basement
     ProkitekturaBasement,
     # Random Choice
@@ -152,7 +159,9 @@ classes = (
     # Dormer
     ProkitekturaDormer,
     # Ridge
-    ProkitekturaRidge
+    ProkitekturaRidge,
+    # Chimney
+    ProkitekturaChimney
 )
 
 
