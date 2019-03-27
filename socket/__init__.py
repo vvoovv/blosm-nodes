@@ -4,7 +4,11 @@ from bpy.types import NodeSocket
 
 class ProkitekturaSocketMarkup(NodeSocket):
     """
-    Node socket type for markup inside some elements
+    Node socket type to start a markup definition.
+    All markup items must be connected in the following way:
+        * the output socket "next" is linked to the input socket "previous";
+        * the input socket "previous" of the first markup item is linked
+            to the output socket "markup" of the parent item for the markup items
     """
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaSocketMarkup"
@@ -13,13 +17,43 @@ class ProkitekturaSocketMarkup(NodeSocket):
 
     markup: bpy.props.IntProperty(
         name = "markup",
-        description = "Markup inside some elements",
+        description = "An output socket to tart a markup definition inside some elements",
         default = 1
     )
 
     # Optional function for drawing the socket input value
     def draw(self, context, layout, node, text):
         layout.label(text=text)
+
+    # Socket color
+    def draw_color(self, context, node):
+        return (1.0, 0.4, 0.216, 0.5)
+
+
+class ProkitekturaSocketMarkupItem(NodeSocket):
+    """
+    Node socket type for a markup item.
+    """
+    # Optional identifier string. If not explicitly defined, the python class name is used.
+    bl_idname = "ProkitekturaSocketMarkupItem"
+    # Label for nice name display
+    bl_label = "Markup Item"
+
+    markup: bpy.props.IntProperty(
+        name = "markup",
+        description = "A socket to connect neighbor markup items",
+        default = 1
+    )
+
+    # Optional function for drawing the socket input value
+    def draw(self, context, layout, node, text):
+        if self.is_linked and not self.is_output:
+            if isinstance(self.links[0].from_socket, ProkitekturaSocketMarkup):
+                layout.label(text="markup")
+            else:
+                layout.label(text="previous")
+        else:
+            layout.label(text=text)
 
     # Socket color
     def draw_color(self, context, node):

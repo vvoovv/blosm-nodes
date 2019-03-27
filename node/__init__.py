@@ -32,10 +32,11 @@ class ProkitekturaNode(Node, ProkitekturaTreeNode):
     #       a purely internal Python method and unknown to the node system!
     def init(self, context):
         self.inputs.new('ProkitekturaSocketCondition', "condition")
-        self.inputs.new('ProkitekturaSocketMarkup', "markup")
+        self.inputs.new('ProkitekturaSocketMarkupItem', "markup or previous")
         self.inputs.new('ProkitekturaSocketDefs', "defs")
         
         self.outputs.new('ProkitekturaSocketMarkup', "markup")
+        self.outputs.new('ProkitekturaSocketMarkupItem', "next")
         self.outputs.new('ProkitekturaSocketDefs', "defs")
 
     # Copy function to initialize a copied node from an existing one.

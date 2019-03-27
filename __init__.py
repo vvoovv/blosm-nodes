@@ -1,14 +1,12 @@
 import bpy
 from bpy.types import NodeTree
 
-from .socket import ProkitekturaSocketMarkup, ProkitekturaSocketDefs, ProkitekturaSocketCondition,\
-    ProkitekturaSocketWallCladding
+from .socket import ProkitekturaSocketMarkup, ProkitekturaSocketMarkupItem,\
+    ProkitekturaSocketDefs, ProkitekturaSocketCondition, ProkitekturaSocketWallCladding
 
-from .node.footprint import ProkitekturaFootprint,\
-    ProkitekturaSocketRoofShape, ProkitekturaSocketFacades, ProkitekturaSocketRoofSides
+from .node.footprint import ProkitekturaFootprint, ProkitekturaSocketRoofShape
 
-from .node.facade import ProkitekturaFacade,\
-    ProkitekturaSocketFootprint, ProkitekturaSocketLevelsDivs
+from .node.facade import ProkitekturaFacade
     
 from .node.div import ProkitekturaDiv
 from .node.level import ProkitekturaLevel
@@ -128,16 +126,13 @@ node_categories = [
 classes = (
     ProkitekturaNodeTree,
     ProkitekturaSocketMarkup,
+    ProkitekturaSocketMarkupItem,
     ProkitekturaSocketDefs,
     ProkitekturaSocketCondition,
     # Footprint
     ProkitekturaSocketRoofShape,
-    ProkitekturaSocketFacades,
-    ProkitekturaSocketRoofSides,
     ProkitekturaFootprint,
     # Facade
-    ProkitekturaSocketFootprint,
-    ProkitekturaSocketLevelsDivs,
     ProkitekturaSocketWallCladding,
     ProkitekturaFacade,
     # Div
@@ -170,11 +165,11 @@ def register():
     for cls in classes:
         register_class(cls)
 
-    nodeitems_utils.register_node_categories('CUSTOM_NODES', node_categories)
+    nodeitems_utils.register_node_categories('PROKITEKTURA_NODES', node_categories)
 
 
 def unregister():
-    nodeitems_utils.unregister_node_categories('CUSTOM_NODES')
+    nodeitems_utils.unregister_node_categories('PROKITEKTURA_NODES')
 
     from bpy.utils import unregister_class
     for cls in reversed(classes):
