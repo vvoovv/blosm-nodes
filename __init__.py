@@ -65,7 +65,7 @@ node_categories = [
         # our basic node
         NodeItem("ProkitekturaFootprint"),
         NodeItem("ProkitekturaFacade"),
-        NodeItem("ProkitekturaDiv"),
+        NodeItem("ProkitekturaDiv", label="Div"),
         NodeItem("ProkitekturaLevel"),
         NodeItem("ProkitekturaRoofSide"),
         NodeItem("ProkitekturaBasement"),

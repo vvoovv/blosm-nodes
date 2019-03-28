@@ -37,6 +37,12 @@ class ProkitekturaSocketRoofShape(NodeSocket):
         items = roofShapeList,
         default = "flat"
     )
+    
+    countGroundLevel: bpy.props.BoolProperty(
+        name = "Count Ground Level",
+        description = "Shall we count the the ground level for the setting below",
+        default = False
+    )
 
     # Optional function for drawing the socket input value
     def draw(self, context, layout, node, text):
@@ -57,7 +63,7 @@ class ProkitekturaFootprint(ProkitekturaNode):
     bl_label = "Footprint"
     # Icon identifier
     bl_icon = 'SOUND'
-
+    
     def init(self, context):
         super().init(context)
         self.inputs.new('NodeSocketIntUnsigned', "number of levels")

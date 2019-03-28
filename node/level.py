@@ -1,8 +1,8 @@
 import bpy
-from . import ProkitekturaNode
+from . import ProkitekturaNode, ProkitekturaContainerNode
 
 
-class ProkitekturaLevel(ProkitekturaNode):
+class ProkitekturaLevel(ProkitekturaNode, ProkitekturaContainerNode):
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaLevel"
     # Label for nice name display
@@ -54,3 +54,5 @@ class ProkitekturaLevel(ProkitekturaNode):
         layout.prop(self, "levelOptions", text="levels")
         if self.levelOptions == 'specific':
             layout.prop(self, "specificLevel", text="level number")
+        
+        self.draw_buttons_symmetry(context, layout)

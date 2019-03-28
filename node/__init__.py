@@ -2,12 +2,43 @@ import bpy
 from bpy.types import Node
 
 
-# Mix-in class for all custom nodes in this tree type.
-# Defines a poll function to enable instantiation.
 class ProkitekturaTreeNode:
+    """
+    Mix-in class for all custom nodes in this tree type.
+    Defines a poll function to enable instantiation.
+    """
     @classmethod
     def poll(cls, ntree):
         return ntree.bl_idname == "ProkitekturaNodeTree"
+
+
+class ProkitekturaContainerNode:
+    """
+    Mix-in class for container nodes (Div, Layer, Basement)
+    """
+    symmetryList = (
+        ("no", "no", "no symmetry"),
+        ("middleOfLast", "middle of last", "relative to the middle of the last item"),
+        ("rightmostOfLast", "rightmost of Last", "relative to the rightmost end of the last item")
+    )
+    
+    symmetry: bpy.props.EnumProperty(
+        name = "Symmetry",
+        description = "Defines if there is a symmetry of items and the center of the symmetry",
+        items = symmetryList,
+        default = "no"
+    )
+    
+    symmetryFlip: bpy.props.BoolProperty(
+        name = "Flip for Symmetry",
+        description = "Flip items on the other side of the center of symmetry to achive the total symmetry or leave the items intact",
+        default = False
+    )
+    
+    def draw_buttons_symmetry(self, context, layout):
+        layout.prop(self, "symmetry", text="symmetry")
+        if self.symmetry != "no":
+            layout.prop(self, "symmetryFlip", text="flip for symmetry")
 
 
 # Derived from the Node base type.

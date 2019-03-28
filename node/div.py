@@ -1,12 +1,12 @@
 import bpy
-from . import ProkitekturaNode
+from . import ProkitekturaNode, ProkitekturaContainerNode
 
 
-class ProkitekturaDiv(ProkitekturaNode):
+class ProkitekturaDiv(ProkitekturaNode, ProkitekturaContainerNode):
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaDiv"
     # Label for nice name display
-    bl_label = "Div (Division)"
+    bl_label = "Div"
     # Icon identifier
     bl_icon = 'SOUND'
     
@@ -26,3 +26,7 @@ class ProkitekturaDiv(ProkitekturaNode):
         self.inputs.new('ProkitekturaSocketWallCladding', "material")
         self.inputs.new('NodeSocketColor', "color")
         super().init(context)
+
+    # Additional buttons displayed on the node.
+    def draw_buttons(self, context, layout):        
+        self.draw_buttons_symmetry(context, layout)
