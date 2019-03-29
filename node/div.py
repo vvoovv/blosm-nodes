@@ -25,7 +25,9 @@ class ProkitekturaDiv(ProkitekturaNode, ProkitekturaContainerNode):
     def init(self, context):
         self.inputs.new('ProkitekturaSocketWallCladding', "material")
         self.inputs.new('NodeSocketColor', "color")
+        self.inputWidth()
         super().init(context)
+        self.outputWidth()
 
     # Additional buttons displayed on the node.
     def draw_buttons(self, context, layout):        

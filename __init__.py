@@ -67,19 +67,23 @@ node_categories = [
         NodeItem("ProkitekturaFacade"),
         NodeItem("ProkitekturaDiv", label="Div"),
         NodeItem("ProkitekturaLevel"),
-        NodeItem("ProkitekturaRoofSide"),
         NodeItem("ProkitekturaBasement"),
-        NodeItem("ProkitekturaRandomChoice"),
-        NodeItem("ProkitekturaBalcony"),
-        NodeItem("ProkitekturaDormer"),
-        NodeItem("ProkitekturaRidge"),
-        NodeItem("ProkitekturaChimney")
+        NodeItem("ProkitekturaRandomChoice")
     ]),
     ProkitekturaNodeCategory("WINDOWS", "Windows", items=[
         # the node item can have additional settings,
         # which are applied to new nodes
         # NB: settings values are stored as string expressions,
         # for this reason they should be converted to strings using repr()
+        NodeItem(
+            "ProkitekturaWindow",
+            label="1 panel 80x100",
+            settings = {
+                "width": repr(0.8),
+                "height": repr(1.),
+                "panelsRow1": repr(1)
+            }
+        ),
         NodeItem(
             "ProkitekturaWindow",
             label="2 panels 120x110",
@@ -115,11 +119,29 @@ node_categories = [
                 "height": repr(1.1),
                 "panelsRow1": repr(3)
             }
+        ),
+        NodeItem(
+            "ProkitekturaWindow",
+            label="roof window",
+            settings = {
+                "width": repr(0.8),
+                "height": repr(1.),
+                "panelsRow1": repr(1)
+            }
         )
     ]),
     ProkitekturaNodeCategory("DOORS", "Doors", items=[
         NodeItem("ProkitekturaDoor")
-    ])
+    ]),
+    ProkitekturaNodeCategory("BALCONIES", "Balconies", items=[
+        NodeItem("ProkitekturaBalcony")
+    ]),
+    ProkitekturaNodeCategory("ROOFITEMS", "Roof Items", items=[
+        NodeItem("ProkitekturaRoofSide"),
+        NodeItem("ProkitekturaRidge"),
+        NodeItem("ProkitekturaDormer"),
+        NodeItem("ProkitekturaChimney")
+    ])    
 ]
 
 

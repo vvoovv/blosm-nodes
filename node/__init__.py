@@ -14,7 +14,7 @@ class ProkitekturaTreeNode:
 
 class ProkitekturaContainerNode:
     """
-    Mix-in class for container nodes (Div, Layer, Basement)
+    Mix-in class for container nodes (Div, Layer, Basement, RoofSide, Ridge)
     """
     symmetryList = (
         ("no", "no", "no symmetry"),
@@ -69,6 +69,12 @@ class ProkitekturaNode(Node, ProkitekturaTreeNode):
         self.outputs.new('ProkitekturaSocketMarkup', "markup")
         self.outputs.new('ProkitekturaSocketMarkupItem', "next")
         self.outputs.new('ProkitekturaSocketDefs', "defs")
+    
+    def inputWidth(self):
+        self.inputs.new('NodeSocketFloatUnsigned', "width")
+
+    def outputWidth(self):
+        self.outputs.new('NodeSocketFloatUnsigned', "width")
 
     # Copy function to initialize a copied node from an existing one.
     def copy(self, node):
