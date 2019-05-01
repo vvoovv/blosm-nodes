@@ -56,7 +56,7 @@ class ProkitekturaSocketRoofShape(NodeSocket):
         return (1.0, 0.4, 0.216, 0.5)
 
 
-class ProkitekturaFootprint(ProkitekturaNode):
+class ProkitekturaFootprint(bpy.types.Node, ProkitekturaNode):
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaFootprint"
     # Label for nice name display
@@ -68,5 +68,8 @@ class ProkitekturaFootprint(ProkitekturaNode):
         super().init(context)
         self.inputs.new('NodeSocketIntUnsigned', "number of levels")
         self.inputs.new('NodeSocketIntUnsigned', "min level")
-        self.inputs.new('NodeSocketFloatUnsigned', "level height")
+        self.inputs.new('NodeSocketFloatUnsigned', "height")
         self.inputs.new('ProkitekturaSocketRoofShape', "roof shape")
+        
+    def draw_buttons(self, context, layout):
+        self.draw_buttons_common(context, layout)

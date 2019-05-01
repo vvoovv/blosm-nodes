@@ -1,8 +1,9 @@
 import bpy
 from bpy.types import NodeTree
 
+
 from .socket import ProkitekturaSocketMarkup, ProkitekturaSocketMarkupItem,\
-    ProkitekturaSocketDefs, ProkitekturaSocketCondition, ProkitekturaSocketWallCladding
+    ProkitekturaSocketDef, ProkitekturaSocketCondition, ProkitekturaSocketWallCladding
 
 from .node.footprint import ProkitekturaFootprint, ProkitekturaSocketRoofShape
 
@@ -106,8 +107,8 @@ node_categories = [
             "ProkitekturaWindow",
             label="2 panels 180x210",
             settings = {
-                "width": repr(1.2),
-                "height": repr(1.1),
+                "width": repr(1.8),
+                "height": repr(2.1),
                 "panelsRow1": repr(2)
             }
         ),
@@ -116,7 +117,7 @@ node_categories = [
             label="3 panels 180x210",
             settings = {
                 "width": repr(1.8),
-                "height": repr(1.1),
+                "height": repr(2.1),
                 "panelsRow1": repr(3)
             }
         ),
@@ -147,9 +148,10 @@ node_categories = [
 
 classes = (
     ProkitekturaNodeTree,
+    
     ProkitekturaSocketMarkup,
     ProkitekturaSocketMarkupItem,
-    ProkitekturaSocketDefs,
+    ProkitekturaSocketDef,
     ProkitekturaSocketCondition,
     # Footprint
     ProkitekturaSocketRoofShape,

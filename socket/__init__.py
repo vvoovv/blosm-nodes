@@ -14,10 +14,12 @@ class ProkitekturaSocketMarkup(NodeSocket):
     bl_idname = "ProkitekturaSocketMarkup"
     # Label for nice name display
     bl_label = "Markup"
+    
+    hideForDef = False
 
     markup: bpy.props.IntProperty(
         name = "markup",
-        description = "An output socket to tart a markup definition inside some elements",
+        description = "An output socket to start a markup definition inside some elements",
         default = 1
     )
 
@@ -38,6 +40,8 @@ class ProkitekturaSocketMarkupItem(NodeSocket):
     bl_idname = "ProkitekturaSocketMarkupItem"
     # Label for nice name display
     bl_label = "Markup Item"
+    
+    hideForDef = True
 
     markup: bpy.props.IntProperty(
         name = "markup",
@@ -60,24 +64,29 @@ class ProkitekturaSocketMarkupItem(NodeSocket):
         return (1.0, 0.4, 0.216, 0.5)
 
 
-class ProkitekturaSocketDefs(NodeSocket):
+class ProkitekturaSocketDef(NodeSocket):
     """
     Node socket type for style definitions inside an element
     """
     # Optional identifier string. If not explicitly defined, the python class name is used.
-    bl_idname = "ProkitekturaSocketDefs"
+    bl_idname = "ProkitekturaSocketDef"
     # Label for nice name display
-    bl_label = "Definitions"
+    bl_label = "Definition"
+    
+    hideForDef = True
 
-    definitions: bpy.props.StringProperty(
-        name = "definitions",
-        description = "Style definitions for children elements",
+    definition: bpy.props.StringProperty(
+        name = "definition",
+        description = "Definition of style blocks",
         default = ''
     )
 
     # Optional function for drawing the socket input value
     def draw(self, context, layout, node, text):
-        layout.label(text=text)
+        if self.is_output:
+            layout.prop(node, "defName", text="def")
+        else:
+            layout.label(text=text)
 
     # Socket color
     def draw_color(self, context, node):
@@ -92,6 +101,8 @@ class ProkitekturaSocketCondition(NodeSocket):
     bl_idname = "ProkitekturaSocketCondition"
     # Label for nice name display
     bl_label = "Condition"
+    
+    hideForDef = True
 
     definitions: bpy.props.IntProperty(
         name = "condition",

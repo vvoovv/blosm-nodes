@@ -1,8 +1,8 @@
 import bpy
-from . import ProkitekturaNode, ProkitekturaContainerNode
+from . import ProkitekturaContainerNode
 
 
-class ProkitekturaLevel(ProkitekturaNode, ProkitekturaContainerNode):
+class ProkitekturaLevel(bpy.types.Node, ProkitekturaContainerNode):
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaLevel"
     # Label for nice name display
@@ -43,12 +43,13 @@ class ProkitekturaLevel(ProkitekturaNode, ProkitekturaContainerNode):
     )
     
     def init(self, context):
-        self.inputs.new('ProkitekturaSocketWallCladding', "material")
-        self.inputs.new('NodeSocketColor', "color")
         super().init(context)
+        self.initCladding()
 
     # Additional buttons displayed on the node.
     def draw_buttons(self, context, layout):
+        self.draw_buttons_common(context, layout)
+        
         if not self.levelOptions in ('ground', 'specific', 'last'):
             layout.prop(self, "countGroundLevel", text="count ground level")
         layout.prop(self, "levelOptions", text="levels")

@@ -2,7 +2,7 @@ import bpy
 from . import ProkitekturaNode
 
 
-class ProkitekturaWindow(ProkitekturaNode):
+class ProkitekturaWindow(bpy.types.Node, ProkitekturaNode):
     
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaWindow"
@@ -45,7 +45,7 @@ class ProkitekturaWindow(ProkitekturaNode):
         default = 1.2
     )
     
-    panelsRow1 = bpy.props.IntProperty(
+    panelsRow1: bpy.props.IntProperty(
         name = "Panel in row 1",
         description = "The number of panels in the row 1",
         min = 1,
@@ -61,6 +61,8 @@ class ProkitekturaWindow(ProkitekturaNode):
     
     # Additional buttons displayed on the node.
     def draw_buttons(self, context, layout):
+        self.draw_buttons_common(context, layout)
+        
         layout.prop(self, "type", text="type")
         layout.prop(self, "width", text="width")
         layout.prop(self, "height", text="height")

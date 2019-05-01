@@ -1,7 +1,8 @@
-from . import ProkitekturaNode, ProkitekturaContainerNode
+import bpy
+from . import ProkitekturaContainerNode
 
 
-class ProkitekturaBasement(ProkitekturaNode, ProkitekturaContainerNode):
+class ProkitekturaBasement(bpy.types.Node, ProkitekturaContainerNode):
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaBasement"
     # Label for nice name display
@@ -11,4 +12,8 @@ class ProkitekturaBasement(ProkitekturaNode, ProkitekturaContainerNode):
 
     # Additional buttons displayed on the node.
     def draw_buttons(self, context, layout):        
-        self.draw_buttons_symmetry(context, layout)
+        self.draw_buttons_container(context, layout)
+
+    def init(self, context):
+        super().init(context)
+        self.initCladding()

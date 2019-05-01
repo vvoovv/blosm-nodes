@@ -1,10 +1,8 @@
 import bpy
-from bpy.types import NodeSocket
-
 from . import ProkitekturaNode
 
 
-class ProkitekturaFacade(ProkitekturaNode):
+class ProkitekturaFacade(bpy.types.Node, ProkitekturaNode):
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaFacade"
     # Label for nice name display
@@ -31,10 +29,10 @@ class ProkitekturaFacade(ProkitekturaNode):
     )
 
     def init(self, context):
-        self.inputs.new('ProkitekturaSocketWallCladding', "material")
-        self.inputs.new('NodeSocketColor', "color")
         super().init(context)
+        self.initCladding()
 
     # Additional buttons displayed on the node.
     def draw_buttons(self, context, layout):
+        self.draw_buttons_common(context, layout)
         layout.prop(self, "facadeType", text="type")

@@ -1,8 +1,8 @@
 import bpy
-from . import ProkitekturaNode, ProkitekturaContainerNode
+from . import ProkitekturaContainerNode
 
 
-class ProkitekturaRoofSide(ProkitekturaNode, ProkitekturaContainerNode):
+class ProkitekturaRoofSide(bpy.types.Node, ProkitekturaContainerNode):
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaRoofSide"
     # Label for nice name display
@@ -31,3 +31,4 @@ class ProkitekturaRoofSide(ProkitekturaNode, ProkitekturaContainerNode):
     # Additional buttons displayed on the node.
     def draw_buttons(self, context, layout):
         layout.prop(self, "roofSideType", text="type")
+        self.draw_buttons_container(context, layout)
