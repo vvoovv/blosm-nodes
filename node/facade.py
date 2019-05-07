@@ -1,8 +1,8 @@
 import bpy
-from . import ProkitekturaNode
+from . import ProkitekturaContainerNode
 
 
-class ProkitekturaFacade(bpy.types.Node, ProkitekturaNode):
+class ProkitekturaFacade(bpy.types.Node, ProkitekturaContainerNode):
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaFacade"
     # Label for nice name display
@@ -36,3 +36,4 @@ class ProkitekturaFacade(bpy.types.Node, ProkitekturaNode):
     def draw_buttons(self, context, layout):
         self.draw_buttons_common(context, layout)
         layout.prop(self, "facadeType", text="type")
+        self.draw_buttons_symmetry(context, layout)

@@ -77,7 +77,7 @@ class ProkitekturaNode:
 
     def outputWidth(self):
         self.outputs.new('NodeSocketFloatUnsigned', "width")
-        
+
 
 class ProkitekturaContainerNode(ProkitekturaNode):
     """
