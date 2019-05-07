@@ -3,7 +3,7 @@ from bpy.types import NodeTree
 
 
 from .socket import ProkitekturaSocketMarkup, ProkitekturaSocketMarkupItem,\
-    ProkitekturaSocketDef, ProkitekturaSocketCondition, ProkitekturaSocketWallCladding
+    ProkitekturaSocketCondition, ProkitekturaSocketWallCladding
 
 from .node.footprint import ProkitekturaFootprint, ProkitekturaSocketRoofShape
 
@@ -151,7 +151,6 @@ classes = (
     
     ProkitekturaSocketMarkup,
     ProkitekturaSocketMarkupItem,
-    ProkitekturaSocketDef,
     ProkitekturaSocketCondition,
     # Footprint
     ProkitekturaSocketRoofShape,
