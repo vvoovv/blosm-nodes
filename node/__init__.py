@@ -14,12 +14,12 @@ def _definitionTypeUpdate(self, context):
     return
 
 def _searchDefinitionItems(self,context):
-    defNodesList = []
     if self.typeDefinition == "usedef":
         tree = context.space_data.edit_tree
-        defNames = [ node.defName for node in tree.nodes if node.typeDefinition == "def" and node.bl_idname == self.bl_idname]
-        for name in defNames:
-            defNodesList.append( (name,name,name) )
+        defNodesList = [
+            (node.defName, node.defName, node.defName) for node in tree.nodes
+            if node.bl_idname == self.bl_idname and node.typeDefinition == "def"
+        ]
     else:
         defNodesList = []
     return defNodesList
