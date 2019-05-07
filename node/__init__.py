@@ -1,19 +1,29 @@
 import bpy
 
+def _definitionTypeUpdate(self, context):
+    # new color if pure definition
+    if self.typeDefinition == "def":
+        self.use_custom_color = True
+        self.color = (0.0, 0.8, 1.0)
+    elif self.typeDefinition == "usedef":
+        self.use_custom_color = True
+        self.color = (0.0, 0.4, 0.5)
+    else:
+        self.use_custom_color = False
+       
+    return
 
-def _isDefinitionUpdate(self, context):
-    for defSocket in self.outputs:
-        # find the output socket "def"
-        if defSocket.bl_idname == "ProkitekturaSocketDef":
-            defSocket.hide = not self.isDefinition
-        elif getattr(defSocket, "hideForDef", True):
-            # hide the other output sockets
-            defSocket.hide = self.isDefinition
-    
-    for defSocket in self.inputs:
-        # hide some input sockets
-        if getattr(defSocket, "hideForDef", False):
-            defSocket.hide = self.isDefinition
+def _searchDefinitionItems(self,context):
+    defNodesList = []
+    if self.typeDefinition == "usedef":
+        tree = context.space_data.edit_tree
+        defNames = [ node.defName for node in tree.nodes if node.typeDefinition == "def" and node.bl_idname == self.bl_idname]
+        for name in defNames:
+            defNodesList.append( (name,name,name) )
+    else:
+        defNodesList = []
+    return defNodesList
+
 
 # Derived from the Node base type.
 class ProkitekturaNode:
@@ -23,19 +33,31 @@ class ProkitekturaNode:
     Mix-in class for Prokitektura nodes
     """
     
-    isDefinition: bpy.props.BoolProperty(
-        name = "Is the node a pure definition",
-        description = "Is the node a pure definition",
-        default = False,
-        update = _isDefinitionUpdate
+    definitionTypeList = (
+        ("none", "Node", "Standard Node"),
+        ("def", "Definition", "Set Definition"),
+        ("usedef", "Use Definition", "Use Definition")
+    )
+
+    typeDefinition: bpy.props.EnumProperty(
+        name = "DefinitionType",
+        description = "Definition Type",
+        items = definitionTypeList,
+        default = "none",
+        update = _definitionTypeUpdate
     )
     
+    useDefinition: bpy.props.EnumProperty(
+        name = "UseDefinition",
+        description = "Use Definition",
+        items = _searchDefinitionItems,
+    )
+
     defName: bpy.props.StringProperty(
         name = "Style definition",
         description = "Name for style definition",
         default = ''
     )
-    
     """
     A poll function to enable instantiation.
     """
@@ -56,17 +78,20 @@ class ProkitekturaNode:
     # NOTE: this is not the same as the standard __init__ function in Python, which is
     #       a purely internal Python method and unknown to the node system!
     def init(self, context):
-        self.inputs.new('ProkitekturaSocketDef', "def")
         self.inputs.new('ProkitekturaSocketCondition', "condition")
         self.inputs.new('ProkitekturaSocketMarkupItem', "markup or previous")
         
-        defSocket = self.outputs.new('ProkitekturaSocketDef', "def")
-        defSocket.hide = True
+#        defSocket = self.outputs.new('ProkitekturaSocketDef', "defines")
+#        defSocket.hide = True
         self.outputs.new('ProkitekturaSocketMarkup', "markup")
         self.outputs.new('ProkitekturaSocketMarkupItem', "next")
     
     def draw_buttons_common(self, context, layout):
-        layout.prop(self, "isDefinition", text="pure definition")
+        layout.prop(self, "typeDefinition", text="type")
+        if self.typeDefinition == "usedef":
+            layout.prop(self, "useDefinition", text="use")
+        if self.typeDefinition == "def":
+            layout.prop(self, "defName", text="def")
     
     def initCladding(self):
         self.inputs.new('ProkitekturaSocketWallCladding', "material")

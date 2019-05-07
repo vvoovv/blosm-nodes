@@ -64,35 +64,6 @@ class ProkitekturaSocketMarkupItem(NodeSocket):
         return (1.0, 0.4, 0.216, 0.5)
 
 
-class ProkitekturaSocketDef(NodeSocket):
-    """
-    Node socket type for style definitions inside an element
-    """
-    # Optional identifier string. If not explicitly defined, the python class name is used.
-    bl_idname = "ProkitekturaSocketDef"
-    # Label for nice name display
-    bl_label = "Definition"
-    
-    hideForDef = True
-
-    definition: bpy.props.StringProperty(
-        name = "definition",
-        description = "Definition of style blocks",
-        default = ''
-    )
-
-    # Optional function for drawing the socket input value
-    def draw(self, context, layout, node, text):
-        if self.is_output:
-            layout.prop(node, "defName", text="def")
-        else:
-            layout.label(text=text)
-
-    # Socket color
-    def draw_color(self, context, node):
-        return (1.0, 0.4, 0.216, 0.5)
-
-
 class ProkitekturaSocketCondition(NodeSocket):
     """
     Node socket type for the condition for an element style

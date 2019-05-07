@@ -10,6 +10,9 @@ class ProkitekturaFacade(bpy.types.Node, ProkitekturaNode):
     # Icon identifier
     bl_icon = 'SOUND'
     
+    
+    
+    
     facadeTypeList = (
         ("all", "all", "all"),
         ("front", "front", "front"),
@@ -36,3 +39,6 @@ class ProkitekturaFacade(bpy.types.Node, ProkitekturaNode):
     def draw_buttons(self, context, layout):
         self.draw_buttons_common(context, layout)
         layout.prop(self, "facadeType", text="type")
+ 
+ 
+        
