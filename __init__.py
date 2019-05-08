@@ -142,7 +142,15 @@ node_categories = [
         NodeItem("ProkitekturaRidge"),
         NodeItem("ProkitekturaDormer"),
         NodeItem("ProkitekturaChimney")
-    ])    
+    ]),
+    ProkitekturaNodeCategory("AUX", "Auxiliary elements", items=[
+        NodeItem("NodeReroute"),
+        NodeItem("NodeFrame"),
+        ProkitekturaNodeCategory("MARKUP", "Markup", items=[
+            NodeItem("NodeReroute"),
+            NodeItem("NodeFrame")
+        ])
+    ])   
 ]
 
 
