@@ -28,6 +28,9 @@ from .node.ridge import ProkitekturaRidge
 
 from .node.chimney import ProkitekturaChimney
 
+from .node.demoNode import ProkitekturaDemoAdvancedAttr
+
+
 
 ### Node Categories ###
 # Node categories are a python system for automatically
@@ -69,7 +72,8 @@ node_categories = [
         NodeItem("ProkitekturaDiv", label="Div"),
         NodeItem("ProkitekturaLevel"),
         NodeItem("ProkitekturaBasement"),
-        NodeItem("ProkitekturaRandomChoice")
+        NodeItem("ProkitekturaRandomChoice"),
+        NodeItem("ProkitekturaDemoAdvancedAttr")
     ]),
     ProkitekturaNodeCategory("WINDOWS", "Windows", items=[
         # the node item can have additional settings,
@@ -187,7 +191,8 @@ classes = (
     # Ridge
     ProkitekturaRidge,
     # Chimney
-    ProkitekturaChimney
+    ProkitekturaChimney,
+    ProkitekturaDemoAdvancedAttr
 )
 
 
@@ -197,6 +202,8 @@ def register():
         register_class(cls)
 
     nodeitems_utils.register_node_categories('PROKITEKTURA_NODES', node_categories)
+    bpy.types.Scene.prop_group = PointerProperty(type=Group)
+
 
 
 def unregister():
@@ -205,6 +212,7 @@ def unregister():
     from bpy.utils import unregister_class
     for cls in reversed(classes):
         unregister_class(cls)
+    del bpy.types.Scene.prop_group
 
 
 if __name__ == "__main__":
