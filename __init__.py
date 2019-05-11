@@ -1,9 +1,9 @@
 import bpy
 from bpy.types import NodeTree
 
+from .operator import ProkitekturaOpCreateMarkup
 
-from .socket import ProkitekturaSocketMarkup, ProkitekturaSocketMarkupItem,\
-    ProkitekturaSocketCondition, ProkitekturaSocketWallCladding
+from .socket import ProkitekturaSocketMarkup, ProkitekturaSocketCondition, ProkitekturaSocketWallCladding
 
 from .node.footprint import ProkitekturaFootprint, ProkitekturaSocketRoofShape
 
@@ -159,10 +159,13 @@ node_categories = [
 
 
 classes = (
+    # operators
+    ProkitekturaOpCreateMarkup,
+    
+    # node stuff
     ProkitekturaNodeTree,
     
     ProkitekturaSocketMarkup,
-    ProkitekturaSocketMarkupItem,
     ProkitekturaSocketCondition,
     # Footprint
     ProkitekturaSocketRoofShape,

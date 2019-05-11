@@ -4,11 +4,7 @@ from bpy.types import NodeSocket
 
 class ProkitekturaSocketMarkup(NodeSocket):
     """
-    Node socket type to start a markup definition.
-    All markup items must be connected in the following way:
-        * the output socket "next" is linked to the input socket "previous";
-        * the input socket "previous" of the first markup item is linked
-            to the output socket "markup" of the parent item for the markup items
+    Output socket connected to a Frame with markup nodes
     """
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaSocketMarkup"
@@ -17,47 +13,15 @@ class ProkitekturaSocketMarkup(NodeSocket):
     
     hideForDef = False
 
-    markup: bpy.props.IntProperty(
+    markup: bpy.props.BoolProperty(
         name = "markup",
-        description = "An output socket to start a markup definition inside some elements",
-        default = 1
+        description = "An output socket connected to a Frame with markup nodes",
+        default = True
     )
 
     # Optional function for drawing the socket input value
     def draw(self, context, layout, node, text):
         layout.label(text=text)
-
-    # Socket color
-    def draw_color(self, context, node):
-        return (1.0, 0.4, 0.216, 0.5)
-
-
-class ProkitekturaSocketMarkupItem(NodeSocket):
-    """
-    Node socket type for a markup item.
-    """
-    # Optional identifier string. If not explicitly defined, the python class name is used.
-    bl_idname = "ProkitekturaSocketMarkupItem"
-    # Label for nice name display
-    bl_label = "Markup Item"
-    
-    hideForDef = True
-
-    markup: bpy.props.IntProperty(
-        name = "markup",
-        description = "A socket to connect neighbor markup items",
-        default = 1
-    )
-
-    # Optional function for drawing the socket input value
-    def draw(self, context, layout, node, text):
-        if self.is_linked and not self.is_output:
-            if isinstance(self.links[0].from_socket, ProkitekturaSocketMarkup):
-                layout.label(text="markup")
-            else:
-                layout.label(text="previous")
-        else:
-            layout.label(text=text)
 
     # Socket color
     def draw_color(self, context, node):
@@ -75,10 +39,10 @@ class ProkitekturaSocketCondition(NodeSocket):
     
     hideForDef = True
 
-    definitions: bpy.props.IntProperty(
+    definitions: bpy.props.BoolProperty(
         name = "condition",
         description = "Condition for an element style",
-        default = 1
+        default = True
     )
 
     # Optional function for drawing the socket input value
