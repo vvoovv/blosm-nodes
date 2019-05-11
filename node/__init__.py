@@ -79,12 +79,10 @@ class ProkitekturaNode:
     #       a purely internal Python method and unknown to the node system!
     def init(self, context):
         self.inputs.new('ProkitekturaSocketCondition', "condition")
-        self.inputs.new('ProkitekturaSocketMarkupItem', "markup or previous")
         
 #        defSocket = self.outputs.new('ProkitekturaSocketDef', "defines")
 #        defSocket.hide = True
         self.outputs.new('ProkitekturaSocketMarkup', "markup")
-        self.outputs.new('ProkitekturaSocketMarkupItem', "next")
     
     def draw_buttons_common(self, context, layout):
         layout.prop(self, "typeDefinition", text="type")
