@@ -71,7 +71,6 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaNode):
             for prop in [ prop for prop in self.propList if prop["type"]=="adv"]:
                 row = box.row()
                 row.prop(self, prop["check"], text="use")
-                row.prop(self, prop["name"], text=prop["text"])
-       
-
-
+                column = row.column()
+                column.enabled = getattr(self, prop["check"])
+                column.prop(self, prop["name"], text=prop["text"])
