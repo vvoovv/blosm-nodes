@@ -28,7 +28,7 @@ from .node.ridge import ProkitekturaRidge
 
 from .node.chimney import ProkitekturaChimney
 
-from .node.demoNode import ProkitekturaDemoAdvancedAttr
+from .node.demoNode import ProkitekturaDemoAdvancedAttr, ProkitekturaSocketEnum
 
 
 
@@ -195,7 +195,8 @@ classes = (
     ProkitekturaRidge,
     # Chimney
     ProkitekturaChimney,
-    ProkitekturaDemoAdvancedAttr
+    ProkitekturaDemoAdvancedAttr,
+    ProkitekturaSocketEnum
 )
 
 

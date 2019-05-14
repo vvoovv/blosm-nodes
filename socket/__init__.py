@@ -11,8 +11,6 @@ class ProkitekturaSocketMarkup(NodeSocket):
     # Label for nice name display
     bl_label = "Markup"
     
-    hideForDef = False
-
     markup: bpy.props.BoolProperty(
         name = "markup",
         description = "An output socket connected to a Frame with markup nodes",

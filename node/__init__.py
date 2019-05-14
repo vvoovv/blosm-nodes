@@ -71,6 +71,8 @@ class ProkitekturaNode:
     # http://wiki.blender.org/index.php/Doc:2.6/Manual/Extensions/Python/Properties
     #my_string_prop: bpy.props.StringProperty()
     #my_float_prop: bpy.props.FloatProperty(default=3.1415926)
+    def declareProperties(self):
+        return ( )
 
     # === Optional Functions ===
     # Initialization function, called when a new node is created.
@@ -79,6 +81,7 @@ class ProkitekturaNode:
     #       a purely internal Python method and unknown to the node system!
     def init(self, context):
         self.inputs.new('ProkitekturaSocketCondition', "condition")
+        self.inputs.new('ProkitekturaSocketMarkup', "markup")
         
 #        defSocket = self.outputs.new('ProkitekturaSocketDef', "defines")
 #        defSocket.hide = True
@@ -91,6 +94,26 @@ class ProkitekturaNode:
         if self.typeDefinition == "def":
             layout.prop(self, "defName", text="def")
     
+    def draw_buttons_checked(self,context,layout,propList):
+        col = layout.column(align=True)
+        for prop in [ prop for prop in propList if prop["type"]=="std"]:
+            row = col.row()
+            row.prop(self, prop["check"], text="use")
+            column = row.column()
+            column.enabled = getattr(self, prop["check"])
+            column.prop(self, prop["name"], text=prop["text"])     
+                
+        col = layout.column(align=True)
+        col.prop(self, "showAdvanced", text="Show Advanced")
+        if self.showAdvanced:
+            box = col.box()
+            for prop in [ prop for prop in propList if prop["type"]=="adv"]:
+                row = box.row()
+                row.prop(self, prop["check"], text="use")
+                column = row.column()
+                column.enabled = getattr(self, prop["check"])
+                column.prop(self, prop["name"], text=prop["text"])
+                
     def initCladding(self):
         self.inputs.new('ProkitekturaSocketWallCladding', "material")
         self.inputs.new('NodeSocketColor', "color")
@@ -135,7 +158,6 @@ class ProkitekturaContainerNode(ProkitekturaNode):
     #    link.to_node.select = True
     #    bpy.ops.node.translate_attach(TRANSFORM_OT_translate={"value":(30., -30., 0), "release_confirm":True})
         #bpy.ops.node.translate_attach(TRANSFORM_OT_translate={"value":(30., -30., 0), "constraint_axis":(False, False, False), "constraint_matrix":(1, 0, 0, 0, 1, 0, 0, 0, 1), "constraint_orientation":'GLOBAL', "mirror":True, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "cursor_transform":False, "texture_space":False, "remove_on_cancel":False, "release_confirm":True, "use_accurate":False}, NODE_OT_attach={}, NODE_OT_insert_offset={})
-    
     def draw_buttons_container(self, context, layout):
         self.draw_buttons_common(context, layout)
         self.draw_buttons_symmetry(context, layout)

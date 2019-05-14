@@ -1,10 +1,58 @@
 import bpy
-from bpy.types import NodeSocket 
+from bpy.types import NodeSocket, NodeSocketIntUnsigned 
 
-from . import ProkitekturaNode
+from . import ProkitekturaContainerNode
+
+class ProkitekturaSocketEnum(NodeSocket):
+    # Description string
+    '''Custom node socket type'''
+    # Optional identifier string. If not explicitly defined, the python class name is used.
+    bl_idname = 'ProkitekturaSocketEnum'
+    # Label for nice name display
+    bl_label = "Custom Node Socket"
+
+    # Enum items list
+    my_items = (
+        ('DOWN', "Down", "Where your feet are"),
+        ('UP', "Up", "Where your head should be"),
+        ('LEFT', "Left", "Not right"),
+        ('RIGHT', "Right", "Not left"),
+    )
+
+    my_enum_prop: bpy.props.EnumProperty(
+        name="Direction",
+        description="Just an example",
+        items=my_items,
+        default='UP',
+    )
+
+    activated: bpy.props.BoolProperty(name = "Activated", description = "activated", default = True)
+
+    # Optional function for drawing the socket input value
+    def draw(self, context, layout, node, text):
+        if self.is_linked:
+            layout.label(text=text)
+        elif self.is_output:
+            col = layout.column(align=True)
+            row = col.row(align=True)
+            row.prop(self, "activated", text="use")
+            column = row.column(align=True)
+            column.enabled = getattr(self, "activated")
+            column.prop(self, "my_enum_prop", text=text)
+        else:
+            col = layout.column(align=True)
+            row = col.row(align=True)
+            row.prop(self, "my_enum_prop", text=text)
+            column = row.column(align=True)
+            column.prop(self, "activated", text="use")
+            row.enabled = getattr(self, "activated")
+ 
+    # Socket color
+    def draw_color(self, context, node):
+        return (1.0, 0.4, 0.216, 0.5)
 
 
-class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaNode):
+class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ): # make ProkitekturaNode the first super() in multiple inheritance
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaDemoAdvancedAttr"
     # Label for nice name display
@@ -13,14 +61,16 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaNode):
     bl_icon = 'SOUND'
 
     # list for iteration over advanced properties
-    propList = (
-        {"type":"std", "name":"countGroundLevel","check":"",             "text":"count ground level", "pythName":"groundLevel" },
-        {"type":"std", "name":"specificLevel",   "check":"",             "text":"levels",             "pythName":"levels" },
-        {"type":"adv", "name":"prop1",           "check":"activateProp1","text":"str",                "pythName":"strProp" },
-        {"type":"adv", "name":"prop2",           "check":"activateProp2","text":"check",              "pythName":"boolProp" },
-        {"type":"adv", "name":"prop3",           "check":"activateProp3","text":"int",                "pythName":"intProp" },
-        {"type":"adv", "name":"prop4",           "check":"activateProp4","text":"levels",             "pythName":"enumProp" }
-    )
+    def declareProperties(self):
+        propList = (
+            {"type":"std", "name":"countGroundLevel","check":"activateProp1", "text":"count ground level", "pythName":"groundLevel" },
+            {"type":"std", "name":"specificLevel",   "check":"activateProp2", "text":"levels",             "pythName":"levels" },
+            {"type":"adv", "name":"prop1",           "check":"activateProp3", "text":"str",                "pythName":"strProp" },
+            {"type":"adv", "name":"prop2",           "check":"activateProp4", "text":"check",              "pythName":"boolProp" },
+            {"type":"adv", "name":"prop3",           "check":"activateProp5", "text":"int",                "pythName":"intProp" },
+            {"type":"adv", "name":"prop4",           "check":"activateProp6", "text":"levels",             "pythName":"enumProp" }
+        )
+        return super().declareProperties() + propList
         
     optionsList = (
         ("all", "all levels", "All"),
@@ -43,11 +93,13 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaNode):
     prop4: bpy.props.EnumProperty(name = "Property4", description = "Level for property1",items = optionsList,default = "all")
 
     # example of activation checks for advanced properties
-    activateProp1: bpy.props.BoolProperty(name = "Activate1", description = "activate1", default = False)
-    activateProp2: bpy.props.BoolProperty(name = "Activate2", description = "activate2", default = False)
+    activateProp1: bpy.props.BoolProperty(name = "Activate1", description = "activate1", default = True)
+    activateProp2: bpy.props.BoolProperty(name = "Activate2", description = "activate2", default = True)
     activateProp3: bpy.props.BoolProperty(name = "Activate3", description = "activate3", default = False)
     activateProp4: bpy.props.BoolProperty(name = "Activate4", description = "activate4", default = False)
-    
+    activateProp5: bpy.props.BoolProperty(name = "Activate5", description = "activate5", default = False)
+    activateProp6: bpy.props.BoolProperty(name = "Activate6", description = "activate6", default = False)
+   
     showAdvanced: bpy.props.BoolProperty(name = "ShowAdvanced", description = "Show advanced properties",default = False)
    
     def draw(self, context, layout):
@@ -55,22 +107,16 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaNode):
         
     def init(self, context):
         super().init(context)
-        self.inputs.new('NodeSocketIntUnsigned', "std in")        
-        self.outputs.new('NodeSocketIntUnsigned', "std out")
+        self.inputs.new('ProkitekturaSocketEnum', "in")        
+        self.outputs.new('ProkitekturaSocketEnum', "out")        
 
     def draw_buttons(self, context, layout):
+        innodes = [innode for innode in self.outputs if innode.is_output]
+        for node in innodes:
+            pass
+#            inp = getattr(self,"inputs")
         self.draw_buttons_common(context, layout)
-        
-        for prop in [ prop for prop in self.propList if prop["type"]=="std"]:
-            layout.prop(self, prop["name"], text=prop["text"])
-     
-        col = layout.column(align=True)
-        col.prop(self, "showAdvanced", text="Show Advanced")
-        if self.showAdvanced:
-            box = col.box()
-            for prop in [ prop for prop in self.propList if prop["type"]=="adv"]:
-                row = box.row()
-                row.prop(self, prop["check"], text="use")
-                column = row.column()
-                column.enabled = getattr(self, prop["check"])
-                column.prop(self, prop["name"], text=prop["text"])
+        propList = self.declareProperties()
+        self.draw_buttons_checked(context,layout,propList)
+        self.draw_buttons_symmetry(context, layout)
+
