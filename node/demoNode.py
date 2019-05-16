@@ -41,11 +41,11 @@ class ProkitekturaSocketEnum(NodeSocket):
             column.prop(self, "my_enum_prop", text=text)
         else:
             col = layout.column(align=True)
-            row = col.row(align=True)
-            row.prop(self, "my_enum_prop", text=text)
-            column = row.column(align=True)
-            column.prop(self, "activated", text="use")
-            row.enabled = getattr(self, "activated")
+            row = col.row()
+            row.prop(self, "activated", text="use")
+            column = row.column()
+            column.enabled = getattr(self, "activated")
+            column.prop(self, "my_enum_prop", text=text)
  
     # Socket color
     def draw_color(self, context, node):
@@ -61,16 +61,16 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
     bl_icon = 'SOUND'
 
     # list for iteration over advanced properties
-    def declareProperties(self):
-        propList = (
+    def declareProperties(self, propList):
+        super().declareProperties(propList)
+        propList.extend((
             {"type":"std", "name":"countGroundLevel","check":"activateProp1", "text":"count ground level", "pythName":"groundLevel" },
             {"type":"std", "name":"specificLevel",   "check":"activateProp2", "text":"levels",             "pythName":"levels" },
             {"type":"adv", "name":"prop1",           "check":"activateProp3", "text":"str",                "pythName":"strProp" },
             {"type":"adv", "name":"prop2",           "check":"activateProp4", "text":"check",              "pythName":"boolProp" },
             {"type":"adv", "name":"prop3",           "check":"activateProp5", "text":"int",                "pythName":"intProp" },
             {"type":"adv", "name":"prop4",           "check":"activateProp6", "text":"levels",             "pythName":"enumProp" }
-        )
-        return super().declareProperties() + propList
+        ))
         
     optionsList = (
         ("all", "all levels", "All"),
@@ -81,6 +81,8 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
         ("even", "even levels", "Even levels"),
         ("odd", "odd levels", "Odd levels")
     )
+    
+    propList = []
     
     # examples of mandatory  attributes 
     countGroundLevel: bpy.props.BoolProperty(name = "Count Ground Level",description = "Shall we count the the ground level for the setting below",default = False)    
@@ -106,17 +108,18 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
         super().draw(context,layout)
         
     def init(self, context):
-        super().init(context)
-        self.inputs.new('ProkitekturaSocketEnum', "in")        
+        if not self.propList:
+            self.declareProperties(self.propList)
+        self.inputs.new('ProkitekturaSocketEnum', "in")
+        super().init(context)    
         self.outputs.new('ProkitekturaSocketEnum', "out")        
 
     def draw_buttons(self, context, layout):
-        innodes = [innode for innode in self.outputs if innode.is_output]
-        for node in innodes:
-            pass
+        # innodes = [innode for innode in self.outputs if innode.is_output]
+        # for node in innodes:
+        #    pass
 #            inp = getattr(self,"inputs")
         self.draw_buttons_common(context, layout)
-        propList = self.declareProperties()
-        self.draw_buttons_checked(context,layout,propList)
-        self.draw_buttons_symmetry(context, layout)
+        self.draw_buttons_checked(context, layout, self.propList)
+        #self.draw_buttons_symmetry(context, layout)
 
