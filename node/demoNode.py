@@ -1,56 +1,7 @@
 import bpy
-from bpy.types import NodeSocket, NodeSocketIntUnsigned 
+from bpy.types import NodeSocket 
 
 from . import ProkitekturaContainerNode
-
-class ProkitekturaSocketEnum(NodeSocket):
-    # Description string
-    '''Custom node socket type'''
-    # Optional identifier string. If not explicitly defined, the python class name is used.
-    bl_idname = 'ProkitekturaSocketEnum'
-    # Label for nice name display
-    bl_label = "Custom Node Socket"
-
-    # Enum items list
-    my_items = (
-        ('DOWN', "Down", "Where your feet are"),
-        ('UP', "Up", "Where your head should be"),
-        ('LEFT', "Left", "Not right"),
-        ('RIGHT', "Right", "Not left"),
-    )
-
-    my_enum_prop: bpy.props.EnumProperty(
-        name="Direction",
-        description="Just an example",
-        items=my_items,
-        default='UP',
-    )
-
-    activated: bpy.props.BoolProperty(name = "Activated", description = "activated", default = True)
-
-    # Optional function for drawing the socket input value
-    def draw(self, context, layout, node, text):
-        if self.is_linked:
-            layout.label(text=text)
-        elif self.is_output:
-            col = layout.column(align=True)
-            row = col.row(align=True)
-            row.prop(self, "activated", text="use")
-            column = row.column(align=True)
-            column.enabled = getattr(self, "activated")
-            column.prop(self, "my_enum_prop", text=text)
-        else:
-            col = layout.column(align=True)
-            row = col.row(align=True)
-            row.prop(self, "my_enum_prop", text=text)
-            column = row.column(align=True)
-            column.prop(self, "activated", text="use")
-            row.enabled = getattr(self, "activated")
- 
-    # Socket color
-    def draw_color(self, context, node):
-        return (1.0, 0.4, 0.216, 0.5)
-
 
 class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ): # make ProkitekturaNode the first super() in multiple inheritance
     # Optional identifier string. If not explicitly defined, the python class name is used.
@@ -107,8 +58,8 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
         
     def init(self, context):
         super().init(context)
-        self.inputs.new('ProkitekturaSocketEnum', "in")        
-        self.outputs.new('ProkitekturaSocketEnum', "out")        
+        s = self.inputs.new("ProkitekturaSocketEnum", "example")
+        setattr(s,"python","roofShape")
 
     def draw_buttons(self, context, layout):
         innodes = [innode for innode in self.outputs if innode.is_output]

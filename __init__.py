@@ -3,7 +3,10 @@ from bpy.types import NodeTree
 
 from .operator import ProkitekturaOpCreateMarkup
 
-from .socket import ProkitekturaSocketMarkup, ProkitekturaSocketCondition, ProkitekturaSocketWallCladding
+from .socket import ProkitekturaSocketMarkup, ProkitekturaSocketCondition, ProkitekturaSocketWallCladding, \
+                    ProkitekturaCheckedSocketBase, ProkitekturaSocketEnum
+
+                    
 
 from .node.footprint import ProkitekturaFootprint, ProkitekturaSocketRoofShape
 
@@ -28,7 +31,7 @@ from .node.ridge import ProkitekturaRidge
 
 from .node.chimney import ProkitekturaChimney
 
-from .node.demoNode import ProkitekturaDemoAdvancedAttr, ProkitekturaSocketEnum
+from .node.demoNode import ProkitekturaDemoAdvancedAttr
 
 
 
@@ -167,6 +170,7 @@ classes = (
     
     ProkitekturaSocketMarkup,
     ProkitekturaSocketCondition,
+    ProkitekturaCheckedSocketBase,
     # Footprint
     ProkitekturaSocketRoofShape,
     ProkitekturaFootprint,
