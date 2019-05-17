@@ -12,16 +12,16 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
     bl_icon = 'SOUND'
 
     # list for iteration over advanced properties
-    def declareProperties(self):
-        propList = (
+    def declareProperties(self, propList):
+        super().declareProperties(propList)
+        propList.extend((
             {"type":"std", "name":"countGroundLevel","check":"activateProp1", "text":"count ground level", "pythName":"groundLevel" },
             {"type":"std", "name":"specificLevel",   "check":"activateProp2", "text":"levels",             "pythName":"levels" },
             {"type":"adv", "name":"prop1",           "check":"activateProp3", "text":"str",                "pythName":"strProp" },
             {"type":"adv", "name":"prop2",           "check":"activateProp4", "text":"check",              "pythName":"boolProp" },
             {"type":"adv", "name":"prop3",           "check":"activateProp5", "text":"int",                "pythName":"intProp" },
             {"type":"adv", "name":"prop4",           "check":"activateProp6", "text":"levels",             "pythName":"enumProp" }
-        )
-        return super().declareProperties() + propList
+        ))
         
     optionsList = (
         ("all", "all levels", "All"),
