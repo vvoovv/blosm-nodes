@@ -33,6 +33,8 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
         ("odd", "odd levels", "Odd levels")
     )
     
+    propList = []
+    
     # examples of mandatory  attributes 
     countGroundLevel: bpy.props.BoolProperty(name = "Count Ground Level",description = "Shall we count the the ground level for the setting below",default = False)    
     specificLevel: bpy.props.IntProperty(name = "Specific Level",description = "The number of the specific level",subtype = 'UNSIGNED',default = 1,min = 0)
@@ -57,17 +59,18 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
         super().draw(context,layout)
         
     def init(self, context):
-        super().init(context)
+        if not self.propList:
+            self.declareProperties(self.propList)
         s = self.inputs.new("ProkitekturaSocketEnum", "example")
         setattr(s,"python","roofShape")
-
+        super().init(context)    
+ 
     def draw_buttons(self, context, layout):
-        innodes = [innode for innode in self.outputs if innode.is_output]
-        for node in innodes:
-            pass
+        # innodes = [innode for innode in self.outputs if innode.is_output]
+        # for node in innodes:
+        #    pass
 #            inp = getattr(self,"inputs")
         self.draw_buttons_common(context, layout)
-        propList = self.declareProperties()
-        self.draw_buttons_checked(context,layout,propList)
-        self.draw_buttons_symmetry(context, layout)
+        self.draw_buttons_checked(context, layout, self.propList)
+        #self.draw_buttons_symmetry(context, layout)
 

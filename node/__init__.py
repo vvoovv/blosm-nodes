@@ -71,8 +71,8 @@ class ProkitekturaNode:
     # http://wiki.blender.org/index.php/Doc:2.6/Manual/Extensions/Python/Properties
     #my_string_prop: bpy.props.StringProperty()
     #my_float_prop: bpy.props.FloatProperty(default=3.1415926)
-    def declareProperties(self):
-        return ( )
+    def declareProperties(self, propList):
+        return
 
     # === Optional Functions ===
     # Initialization function, called when a new node is created.
@@ -93,27 +93,26 @@ class ProkitekturaNode:
             layout.prop(self, "useDefinition", text="use")
         if self.typeDefinition == "def":
             layout.prop(self, "defName", text="def")
+        
+        layout.prop(self, "showAdvanced", text="Show Advanced")
     
-    def draw_buttons_checked(self,context,layout,propList):
+    def draw_buttons_checked(self, context, layout, propList):
         col = layout.column(align=True)
-        for prop in [ prop for prop in propList if prop["type"]=="std"]:
-            row = col.row()
-            row.prop(self, prop["check"], text="use")
-            column = row.column()
-            column.enabled = getattr(self, prop["check"])
-            column.prop(self, prop["name"], text=prop["text"])     
-                
-        col = layout.column(align=True)
-        col.prop(self, "showAdvanced", text="Show Advanced")
-        if self.showAdvanced:
-            box = col.box()
-            for prop in [ prop for prop in propList if prop["type"]=="adv"]:
+        box = layout.column(align=True).box() if self.showAdvanced else None
+        for prop in propList:
+            if prop["type"]=="std":
+                row = col.row()
+                row.prop(self, prop["check"], text="use")
+                column = row.column()
+                column.enabled = getattr(self, prop["check"])
+                column.prop(self, prop["name"], text=prop["text"])
+            elif box:
                 row = box.row()
                 row.prop(self, prop["check"], text="use")
                 column = row.column()
                 column.enabled = getattr(self, prop["check"])
                 column.prop(self, prop["name"], text=prop["text"])
-                
+    
     def initCladding(self):
         self.inputs.new('ProkitekturaSocketWallCladding', "material")
         self.inputs.new('NodeSocketColor', "color")
