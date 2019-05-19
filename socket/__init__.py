@@ -43,7 +43,7 @@ class ProkitekturaSocketCondition(NodeSocket):
         description = "Condition for an element style",
         default = True
     )
-
+    
     # Optional function for drawing the socket input value
     def draw(self, context, layout, node, text):
         layout.label(text=text)
@@ -123,10 +123,11 @@ class ProkitekturaCheckedSocketBase(NodeSocket):
         else:
             col = layout.column(align=True)
             row = col.row(align=True)
-            row.prop(self, "value", text=text)
-            column = row.column(align=True)
-            column.prop(self, "activated", text="use")
-            row.enabled = getattr(self, "activated")
+            column0 = row.column(align=True)
+            column0.prop(self, "value", text=text)
+            column1 = row.column(align=True)
+            column1.prop(self, "activated", text="use")
+            column0.enabled = getattr(self, "activated")
       
     # Socket color
     def draw_color(self, context, node):
@@ -134,7 +135,7 @@ class ProkitekturaCheckedSocketBase(NodeSocket):
     
 class ProkitekturaCheckedSocketMixIn():
     '''See class ProkitekturaCheckedSocketBase'''
-    activated: bpy.props.BoolProperty(name = "Activated", description = "activated", default = False)
+    activated: bpy.props.BoolProperty(name = "Activated", description = "activated", default = True)
     python: bpy.props.StringProperty(name = "Python", description = "python code", default = "")
 
 class ProkitekturaSocketEnum(ProkitekturaCheckedSocketMixIn, ProkitekturaCheckedSocketBase):

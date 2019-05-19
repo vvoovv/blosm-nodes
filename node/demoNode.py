@@ -22,7 +22,15 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
             {"type":"adv", "name":"prop3",           "check":"activateProp5", "text":"int",                "pythName":"intProp" },
             {"type":"adv", "name":"prop4",           "check":"activateProp6", "text":"levels",             "pythName":"enumProp" }
         ))
-        
+ 
+     # list for iteration over advanced properties
+    def declareCheckedSockets(self, socketList):
+        super().declareProperties(socketList)
+        socketList.extend((
+            {"type":"std", "class":"ProkitekturaSocketEnum","text":"levels", "pythName":"std" },
+            {"type":"adv", "class":"ProkitekturaSocketEnum","text":"levels", "pythName":"adv" }
+        ))
+       
     optionsList = (
         ("all", "all levels", "All"),
         ("ground", "ground level only", "Ground level only"),
@@ -34,6 +42,7 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
     )
     
     propList = []
+    socketList = []
     
     # examples of mandatory  attributes 
     countGroundLevel: bpy.props.BoolProperty(name = "Count Ground Level",description = "Shall we count the the ground level for the setting below",default = False)    
@@ -52,25 +61,22 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
     activateProp4: bpy.props.BoolProperty(name = "Activate4", description = "activate4", default = False)
     activateProp5: bpy.props.BoolProperty(name = "Activate5", description = "activate5", default = False)
     activateProp6: bpy.props.BoolProperty(name = "Activate6", description = "activate6", default = False)
-   
-    showAdvanced: bpy.props.BoolProperty(name = "ShowAdvanced", description = "Show advanced properties",default = False)
-   
-    def draw(self, context, layout):
-        super().draw(context,layout)
-        
+      
     def init(self, context):
         if not self.propList:
             self.declareProperties(self.propList)
-        s = self.inputs.new("ProkitekturaSocketEnum", "example")
-        setattr(s,"python","roofShape")
-        super().init(context)    
+        if not self.socketList:
+            self.declareCheckedSockets(self.socketList)
+
+        super().init(context)          
+        self.init_sockets_checked(context,self.socketList)   
+
  
     def draw_buttons(self, context, layout):
-        # innodes = [innode for innode in self.outputs if innode.is_output]
-        # for node in innodes:
-        #    pass
-#            inp = getattr(self,"inputs")
         self.draw_buttons_common(context, layout)
         self.draw_buttons_checked(context, layout, self.propList)
         #self.draw_buttons_symmetry(context, layout)
+        for text in [ socket["text"] for socket in self.socketList if socket["type"]=="adv"]:
+            for inp in [ inp for inp in context.active_node.inputs if inp.name == text]:
+                inp.do_hide( not self.showAdvanced )
 

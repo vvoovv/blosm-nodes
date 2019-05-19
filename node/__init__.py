@@ -24,6 +24,11 @@ def _searchDefinitionItems(self,context):
         defNodesList = []
     return defNodesList
 
+def _setAdvanced(self,context):
+    for text in [ socket["text"] for socket in self.socketList if socket["type"]=="adv"]:
+        for inp in [ inp for inp in context.active_node.inputs if inp.name == text]:
+            inp.hide = not self.showAdvanced    
+
 
 # Derived from the Node base type.
 class ProkitekturaNode:
@@ -58,6 +63,14 @@ class ProkitekturaNode:
         description = "Name for style definition",
         default = ''
     )
+    
+    showAdvanced: bpy.props.BoolProperty(
+        name = "ShowAdvanced", 
+        description = "Show advanced properties",
+        default = False,
+        update = _setAdvanced
+    )
+
     """
     A poll function to enable instantiation.
     """
@@ -74,6 +87,9 @@ class ProkitekturaNode:
     def declareProperties(self, propList):
         return
 
+    def declareCheckedSockets(self, socketList):
+        return
+
     # === Optional Functions ===
     # Initialization function, called when a new node is created.
     # This is the most common place to create the sockets for a node, as shown below.
@@ -81,12 +97,11 @@ class ProkitekturaNode:
     #       a purely internal Python method and unknown to the node system!
     def init(self, context):
         self.inputs.new('ProkitekturaSocketCondition', "condition")
-        self.inputs.new('ProkitekturaSocketMarkup', "markup")
         
 #        defSocket = self.outputs.new('ProkitekturaSocketDef', "defines")
 #        defSocket.hide = True
         self.outputs.new('ProkitekturaSocketMarkup', "markup")
-    
+
     def draw_buttons_common(self, context, layout):
         layout.prop(self, "typeDefinition", text="type")
         if self.typeDefinition == "usedef":
@@ -112,6 +127,11 @@ class ProkitekturaNode:
                 column = row.column()
                 column.enabled = getattr(self, prop["check"])
                 column.prop(self, prop["name"], text=prop["text"])
+                
+    def init_sockets_checked(self,context,socketList):
+        for socket in socketList:
+            s = self.inputs.new(socket["class"], socket["text"])
+            setattr(s,"python",socket["pythName"])
     
     def initCladding(self):
         self.inputs.new('ProkitekturaSocketWallCladding', "material")
