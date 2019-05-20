@@ -113,21 +113,13 @@ class ProkitekturaCheckedSocketBase(NodeSocket):
     def draw(self, context, layout, node, text):
         if self.is_linked:
             layout.label(text=text)
-        elif self.is_output:
+        else:
             col = layout.column(align=True)
             row = col.row(align=True)
             row.prop(self, "activated", text="use")
             column = row.column(align=True)
             column.enabled = getattr(self, "activated")
             column.prop(self, "value", text=text)
-        else:
-            col = layout.column(align=True)
-            row = col.row(align=True)
-            column0 = row.column(align=True)
-            column0.prop(self, "value", text=text)
-            column1 = row.column(align=True)
-            column1.prop(self, "activated", text="use")
-            column0.enabled = getattr(self, "activated")
       
     # Socket color
     def draw_color(self, context, node):

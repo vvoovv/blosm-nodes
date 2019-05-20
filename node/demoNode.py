@@ -27,8 +27,8 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
     def declareCheckedSockets(self, socketList):
         super().declareProperties(socketList)
         socketList.extend((
-            {"type":"std", "class":"ProkitekturaSocketEnum","text":"levels", "pythName":"std" },
-            {"type":"adv", "class":"ProkitekturaSocketEnum","text":"levels", "pythName":"adv" }
+            {"type":"std", "class":"ProkitekturaSocketEnum","text":"std", "pythName":"std" },
+            {"type":"adv", "class":"ProkitekturaSocketEnum","text":"adv", "pythName":"adv" }
         ))
        
     optionsList = (
@@ -76,7 +76,4 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
         self.draw_buttons_common(context, layout)
         self.draw_buttons_checked(context, layout, self.propList)
         #self.draw_buttons_symmetry(context, layout)
-        for text in [ socket["text"] for socket in self.socketList if socket["type"]=="adv"]:
-            for inp in [ inp for inp in context.active_node.inputs if inp.name == text]:
-                inp.do_hide( not self.showAdvanced )
 
