@@ -25,8 +25,8 @@ def _searchDefinitionItems(self,context):
     return defNodesList
 
 def _setAdvanced(self,context):
-    for text in [ socket["text"] for socket in self.socketList if socket["type"]=="adv"]:
-        for inp in [ inp for inp in self.inputs if inp.name == text]:
+    for text in (socket["text"] for socket in self.socketList if socket["type"]=="adv"):
+        for inp in (inp for inp in self.inputs if inp.name == text):
             inp.hide = not self.showAdvanced    
 
 
@@ -133,8 +133,9 @@ class ProkitekturaNode:
             s = self.inputs.new(socket["class"], socket["text"])
             setattr(s,"python",socket["pythName"])
             if socket["type"]=="adv":
-                setattr(s,"hide",True)
-                setattr(s,"activated",False)
+                setattr(s, "hide", True)
+                setattr(s, "activated", False)
+                setattr(s, "advanced", True)
     
     def initCladding(self):
         self.inputs.new('ProkitekturaSocketWallCladding', "material")

@@ -114,6 +114,8 @@ class ProkitekturaCheckedSocketBase(NodeSocket):
         if self.is_linked:
             layout.label(text=text)
         else:
+            if self.advanced:
+                layout = layout.box()
             col = layout.column(align=True)
             row = col.row(align=True)
             row.prop(self, "activated", text="use")
@@ -124,11 +126,17 @@ class ProkitekturaCheckedSocketBase(NodeSocket):
     # Socket color
     def draw_color(self, context, node):
         return (1.0, 0.4, 0.216, 0.5)
-    
+
+
 class ProkitekturaCheckedSocketMixIn():
     '''See class ProkitekturaCheckedSocketBase'''
+    
     activated: bpy.props.BoolProperty(name = "Activated", description = "activated", default = True)
+    
     python: bpy.props.StringProperty(name = "Python", description = "python code", default = "")
+    
+    advanced: bpy.props.BoolProperty(name = "Advanced", description = "advanced", default = False)
+
 
 class ProkitekturaSocketEnum(ProkitekturaCheckedSocketMixIn, ProkitekturaCheckedSocketBase):
     # Description string
@@ -151,8 +159,7 @@ class ProkitekturaSocketEnum(ProkitekturaCheckedSocketMixIn, ProkitekturaChecked
         items=my_items,
         default='UP',
     )
+    
     # Socket color
     def draw_color(self, context, node):
         return (1.0, 0.4, 0.216, 0.5)
-    
-

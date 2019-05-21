@@ -3,6 +3,7 @@ from bpy.types import NodeSocket
 
 from . import ProkitekturaContainerNode
 
+
 class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ): # make ProkitekturaNode the first super() in multiple inheritance
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaDemoAdvancedAttr"
@@ -23,12 +24,14 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
             {"type":"adv", "name":"prop4",           "check":"activateProp6", "text":"levels",             "pythName":"enumProp" }
         ))
  
-     # list for iteration over advanced properties
+    # list for iteration over advanced properties
     def declareCheckedSockets(self, socketList):
         super().declareProperties(socketList)
         socketList.extend((
-            {"type":"std", "class":"ProkitekturaSocketEnum","text":"std", "pythName":"std" },
-            {"type":"adv", "class":"ProkitekturaSocketEnum","text":"adv", "pythName":"adv" }
+            {"type":"std", "class":"ProkitekturaSocketEnum", "text":"std1", "pythName":"std1"},
+            {"type":"std", "class":"ProkitekturaSocketEnum", "text":"std2", "pythName":"std2"},
+            {"type":"adv", "class":"ProkitekturaSocketEnum", "text":"adv1", "pythName":"adv1"},
+            {"type":"adv", "class":"ProkitekturaSocketEnum", "text":"adv2", "pythName":"adv2"}
         ))
        
     optionsList = (
@@ -67,10 +70,9 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
             self.declareProperties(self.propList)
         if not self.socketList:
             self.declareCheckedSockets(self.socketList)
-
-        super().init(context)          
-        self.init_sockets_checked(context,self.socketList)   
-
+        
+        self.init_sockets_checked(context,self.socketList)
+        super().init(context)
  
     def draw_buttons(self, context, layout):
         self.draw_buttons_common(context, layout)
