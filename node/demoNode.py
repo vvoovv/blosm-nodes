@@ -4,7 +4,7 @@ from bpy.types import NodeSocket
 from . import ProkitekturaContainerNode
 
 
-class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ): # make ProkitekturaNode the first super() in multiple inheritance
+class ProkitekturaDemoAdvancedAttr(ProkitekturaContainerNode, bpy.types.Node): # make ProkitekturaNode the first super() in multiple inheritance
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaDemoAdvancedAttr"
     # Label for nice name display
@@ -26,7 +26,7 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
  
     # list for iteration over advanced properties
     def declareCheckedSockets(self, socketList):
-        super().declareProperties(socketList)
+        super().declareCheckedSockets(socketList)
         socketList.extend((
             {"type":"std", "class":"ProkitekturaSocketEnum", "text":"std1", "pythName":"std1"},
             {"type":"std", "class":"ProkitekturaSocketEnum", "text":"std2", "pythName":"std2"},
@@ -77,5 +77,5 @@ class ProkitekturaDemoAdvancedAttr(bpy.types.Node, ProkitekturaContainerNode  ):
     def draw_buttons(self, context, layout):
         self.draw_buttons_common(context, layout)
         self.draw_buttons_checked(context, layout, self.propList)
-        #self.draw_buttons_symmetry(context, layout)
+#        self.draw_buttons_container(context, layout)
 

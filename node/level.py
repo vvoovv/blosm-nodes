@@ -1,7 +1,20 @@
 import bpy
 from . import ProkitekturaContainerNode
 
+def _updateForOptions(self,context):
+    count_index = next((index for (index, d) in enumerate(self.propList) if d["name"] == "countGroundLevel"), None)
+    if self.levelOptions in ('ground', 'specific', 'last'):
+        self.propList[count_index]["type"] = "hidden"
+    else:
+        self.propList[count_index]["type"] = "std"
 
+    specific_index = next((index for (index, d) in enumerate(self.propList) if d["name"] == "specificLevel"), None)
+    if self.levelOptions == 'specific':
+        self.propList[specific_index]["type"] = "std"
+    else:
+        self.propList[specific_index]["type"] = "hidden"
+        
+    
 class ProkitekturaLevel(bpy.types.Node, ProkitekturaContainerNode):
     # Optional identifier string. If not explicitly defined, the python class name is used.
     bl_idname = "ProkitekturaLevel"
@@ -10,6 +23,22 @@ class ProkitekturaLevel(bpy.types.Node, ProkitekturaContainerNode):
     # Icon identifier
     bl_icon = 'SOUND'
     
+    # list for iteration over advanced properties
+    def declareProperties(self, propList):
+        super().declareProperties(propList)
+        propList.extend((
+            {"type":"std",    "name":"levelOptions",    "check":"activateProp2", "text":"levels",             "pythName":"strProp" },
+            {"type":"std",    "name":"countGroundLevel","check":"activateProp1", "text":"count ground level", "pythName":"groundLevel" },
+            {"type":"hidden", "name":"specificLevel",   "check":"activateProp3", "text":"level number",       "pythName":"index" }
+        ))
+
+    def declareCheckedSockets(self, socketList):
+        super().declareCheckedSockets(socketList)
+        socketList.extend((
+            {"type":"std", "class":"ProkitekturaCheckedSocketWallCladding", "text":"material",  "pythName":"claddingMaterial"},
+            {"type":"std", "class":"ProkitekturaCheckedSocketColor",        "text":"color",     "pythName":"claddingColor"}
+         ))
+
     # Enum items list
     levelOptionsList = (
         ("all", "all levels", "All"),
@@ -39,21 +68,27 @@ class ProkitekturaLevel(bpy.types.Node, ProkitekturaContainerNode):
         name = "Options for level numbers",
         description = "Options for level numbers. The option above \"Count Ground Level\" is taken into account",
         items = levelOptionsList,
-        default = "all"
+        default = "all",
+        update = _updateForOptions
     )
     
-    def init(self, context):
-        super().init(context)
-        self.initCladding()
+    # example of activation checks for advanced properties
+    activateProp1: bpy.props.BoolProperty(name = "Activate1", description = "activate1", default = True)
+    activateProp2: bpy.props.BoolProperty(name = "Activate2", description = "activate2", default = True)
+    activateProp3: bpy.props.BoolProperty(name = "Activate3", description = "activate3", default = True)
 
-    # Additional buttons displayed on the node.
+    propList = []
+    socketList = []
+   
+    def init(self, context):
+        if not self.propList:
+            self.declareProperties(self.propList)
+        if not self.socketList:
+            self.declareCheckedSockets(self.socketList)
+        
+        self.init_sockets_checked(context,self.socketList)        
+        super().init(context)
+ 
     def draw_buttons(self, context, layout):
         self.draw_buttons_common(context, layout)
-        
-        if not self.levelOptions in ('ground', 'specific', 'last'):
-            layout.prop(self, "countGroundLevel", text="count ground level")
-        layout.prop(self, "levelOptions", text="levels")
-        if self.levelOptions == 'specific':
-            layout.prop(self, "specificLevel", text="level number")
-        
-        self.draw_buttons_symmetry(context, layout)
+        self.draw_buttons_checked(context, layout, self.propList)

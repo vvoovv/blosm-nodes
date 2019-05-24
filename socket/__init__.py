@@ -53,42 +53,6 @@ class ProkitekturaSocketCondition(NodeSocket):
         return (1.0, 0.4, 0.216, 0.5)
 
 
-class ProkitekturaSocketWallCladding(NodeSocket):
-    """
-    Node socket type for the condition for wall cladding
-    """
-    # Optional identifier string. If not explicitly defined, the python class name is used.
-    bl_idname = "ProkitekturaSocketWallCladding"
-    # Label for nice name display
-    bl_label = "Cladding"
-
-    # Enum items list
-    materialList = (
-        ("brick", "brick", "brick"),
-        ("plaster", "plaster", "plaster"),
-        ("shiplap", "wood: ship lap", "wood: ship lap"),
-        ("loglap", "wood: log lap", "wood: log lap"),
-        ("log", "wood: log", "wood: log"),
-        ("pvc", "PVC", "PVC")
-    )
-
-    material: bpy.props.EnumProperty(
-        name = "Wall Material",
-        description = "Wall Material",
-        items = materialList,
-        default = "brick"
-    )
-
-    # Optional function for drawing the socket input value
-    def draw(self, context, layout, node, text):
-        if self.is_output or self.is_linked:
-            layout.label(text=text)
-        else:
-            layout.prop(self, "material", text=text)
-
-    # Socket color
-    def draw_color(self, context, node):
-        return (1.0, 0.4, 0.216, 0.5)
     
 
 
@@ -136,7 +100,138 @@ class ProkitekturaCheckedSocketMixIn():
     python: bpy.props.StringProperty(name = "Python", description = "python code", default = "")
     
     advanced: bpy.props.BoolProperty(name = "Advanced", description = "advanced", default = False)
+    
+class ProkitekturaCheckedSocketIntUnsigned(ProkitekturaCheckedSocketMixIn, ProkitekturaCheckedSocketBase):
+    # Description string
+    """
+    A custom node socket type for unsigned integers
+    """
+    # Optional identifier string. If not explicitly defined, the python class name is used.
+    bl_idname = "ProkitekturaCheckedSocketIntUnsigned"
+    # Label for nice name display
+    bl_label = "Unsigned Integer"
+    
+    value: bpy.props.IntProperty(min=0, subtype='UNSIGNED')
 
+    def draw_color(self, context, node):
+        return (1.0, 0.4, 0.216, 0.5)
+
+class ProkitekturaCheckedSocketFloat(ProkitekturaCheckedSocketMixIn, ProkitekturaCheckedSocketBase):
+    # Description string
+    """
+    A custom node socket type for floats
+    """
+    # Optional identifier string. If not explicitly defined, the python class name is used.
+    bl_idname = "ProkitekturaCheckedSocketFloat"
+    # Label for nice name display
+    bl_label = "Float"
+    
+    value: bpy.props.FloatProperty()
+
+    def draw_color(self, context, node):
+        return (1.0, 0.4, 0.216, 0.5)
+
+class ProkitekturaCheckedSocketFloatUnsigned(ProkitekturaCheckedSocketMixIn, ProkitekturaCheckedSocketBase):
+    # Description string
+    """
+    A custom node socket type for unsigned floats
+    """
+    # Optional identifier string. If not explicitly defined, the python class name is used.
+    bl_idname = "ProkitekturaCheckedSocketFloatUnsigned"
+    # Label for nice name display
+    bl_label = "Float"
+    
+    value: bpy.props.FloatProperty(min=0.0)
+
+    def draw_color(self, context, node):
+        return (1.0, 0.4, 0.216, 0.5)
+
+class ProkitekturaCheckedSocketColor(ProkitekturaCheckedSocketMixIn, ProkitekturaCheckedSocketBase):
+    # Description string
+    """
+    A custom node socket type for colors
+    """
+    # Optional identifier string. If not explicitly defined, the python class name is used.
+    bl_idname = "ProkitekturaCheckedSocketColor"
+    # Label for nice name display
+    bl_label = "Color"
+     
+    value: bpy.props.FloatVectorProperty(
+        name = "color",
+        subtype='COLOR',
+        default=(1.0, 1.0, 1.0),
+        min=0.0, max=1.0,
+        description="color picker"
+    )
+ 
+    def draw_color(self, context, node):
+        return (1.0, 0.4, 0.216, 0.5)
+
+class ProkitekturaCheckedSocketRoofShape(ProkitekturaCheckedSocketMixIn, ProkitekturaCheckedSocketBase):
+    # Description string
+    """
+    A custom node socket type for the roof shapes
+    """
+    # Optional identifier string. If not explicitly defined, the python class name is used.
+    bl_idname = "ProkitekturaCheckedSocketRoofShape"
+    # Label for nice name display
+    bl_label = "Roof Shape"
+
+    # Enum items list
+    roofShapeList = (
+        ("flat", "flat", "flat"),
+        ("gabled", "gabled", "gabled"),
+        ("hipped", "hipped", "hipped"),
+        ("pyramidal", "pyramidal", "pyramidal"),
+        ("skillion", "skillion", "skillion"),
+        ("dome", "dome", "dome"),
+        ("onion", "onion", "onion"),
+        ("round", "round", "round"),
+        ("half-hipped", "half-hipped", "half-hipped"),
+        ("gambrel", "gambrel", "gambrel"),
+        ("saltbox", "saltbox", "saltbox"),
+        ("mansard", "mansard", "mansard")
+    )
+
+    value: bpy.props.EnumProperty(
+        name = "Roof Shape",
+        description = "Roof Shape",
+        items = roofShapeList,
+        default = "flat"
+    )
+
+    def draw_color(self, context, node):
+        return (1.0, 0.4, 0.216, 0.5)
+
+class ProkitekturaCheckedSocketWallCladding(ProkitekturaCheckedSocketMixIn, ProkitekturaCheckedSocketBase):
+    """
+    Node socket type for the condition for wall cladding
+    """
+    # Optional identifier string. If not explicitly defined, the python class name is used.
+    bl_idname = "ProkitekturaCheckedSocketWallCladding"
+    # Label for nice name display
+    bl_label = "Cladding"
+
+    # Enum items list
+    materialList = (
+        ("brick", "brick", "brick"),
+        ("plaster", "plaster", "plaster"),
+        ("shiplap", "wood: ship lap", "wood: ship lap"),
+        ("loglap", "wood: log lap", "wood: log lap"),
+        ("log", "wood: log", "wood: log"),
+        ("pvc", "PVC", "PVC")
+    )
+
+    value: bpy.props.EnumProperty(
+        name = "Wall Material",
+        description = "Wall Material",
+        items = materialList,
+        default = "brick"
+    )
+
+    # Socket color
+    def draw_color(self, context, node):
+        return (1.0, 0.4, 0.216, 0.5)
 
 class ProkitekturaSocketEnum(ProkitekturaCheckedSocketMixIn, ProkitekturaCheckedSocketBase):
     # Description string

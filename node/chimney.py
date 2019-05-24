@@ -10,5 +10,18 @@ class ProkitekturaChimney(bpy.types.Node, ProkitekturaNode):
     # Icon identifier
     bl_icon = 'SOUND'
     
+    propList = []
+    socketList = []
+
+    def init(self, context):
+        if not self.propList:
+            self.declareProperties(self.propList)
+        if not self.socketList:
+            self.declareCheckedSockets(self.socketList)
+        
+        self.init_sockets_checked(context,self.socketList)
+        super().init(context)
+ 
     def draw_buttons(self, context, layout):
         self.draw_buttons_common(context, layout)
+        self.draw_buttons_checked(context, layout, self.propList)

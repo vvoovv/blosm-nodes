@@ -3,12 +3,12 @@ from bpy.types import NodeTree
 
 from .operator import ProkitekturaOpCreateMarkup
 
-from .socket import ProkitekturaSocketMarkup, ProkitekturaSocketCondition, ProkitekturaSocketWallCladding, \
-                    ProkitekturaCheckedSocketBase, ProkitekturaSocketEnum
+from .socket import ProkitekturaSocketMarkup, ProkitekturaSocketCondition, ProkitekturaCheckedSocketBase, \
+                    ProkitekturaCheckedSocketIntUnsigned, ProkitekturaCheckedSocketFloat, ProkitekturaCheckedSocketFloatUnsigned,\
+                    ProkitekturaCheckedSocketColor,\
+                    ProkitekturaCheckedSocketRoofShape, ProkitekturaCheckedSocketWallCladding, ProkitekturaSocketEnum              
 
-                    
-
-from .node.footprint import ProkitekturaFootprint, ProkitekturaSocketRoofShape
+from .node.footprint import ProkitekturaFootprint
 
 from .node.facade import ProkitekturaFacade
     
@@ -171,11 +171,16 @@ classes = (
     ProkitekturaSocketMarkup,
     ProkitekturaSocketCondition,
     ProkitekturaCheckedSocketBase,
+    ProkitekturaCheckedSocketIntUnsigned,
+    ProkitekturaCheckedSocketFloat,
+    ProkitekturaCheckedSocketFloatUnsigned,
+    ProkitekturaCheckedSocketColor,
+    ProkitekturaCheckedSocketRoofShape,
+    ProkitekturaCheckedSocketWallCladding,
+    
     # Footprint
-    ProkitekturaSocketRoofShape,
     ProkitekturaFootprint,
     # Facade
-    ProkitekturaSocketWallCladding,
     ProkitekturaFacade,
     # Div
     ProkitekturaDiv,

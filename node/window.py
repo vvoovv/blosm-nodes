@@ -11,6 +11,17 @@ class ProkitekturaWindow(bpy.types.Node, ProkitekturaNode):
     # Icon identifier
     bl_icon = 'SOUND'
     
+    # list for iteration over advanced properties
+    def declareProperties(self, propList):
+        super().declareProperties(propList)
+        propList.extend((
+            {"type":"std",    "name":"type",       "check":"activateProp1", "text":"type",       "pythName":"type" },
+            {"type":"std",    "name":"width",      "check":"activateProp2", "text":"width",      "pythName":"width" },
+            {"type":"std",    "name":"height",     "check":"activateProp3", "text":"height",     "pythName":"height" },
+            {"type":"hidden", "name":"panelsRow1", "check":"activateProp4", "text":"panelsRow1", "pythName":"panels" },
+            {"type":"std",    "name":"shape",      "check":"activateProp5", "text":"shape",      "pythName":"shape" }
+        ))
+ 
     typeList = (
         ("flat", "flat", "flat window"),
         ("rail", "rail", "rail window")
@@ -58,15 +69,29 @@ class ProkitekturaWindow(bpy.types.Node, ProkitekturaNode):
         items = shapeList,
         default = "rectangle"
     )
+
+    # activation checks for properties
+    activateProp1: bpy.props.BoolProperty(name = "Activate1", description = "activate1", default = True)
+    activateProp2: bpy.props.BoolProperty(name = "Activate2", description = "activate2", default = True)
+    activateProp3: bpy.props.BoolProperty(name = "Activate3", description = "activate3", default = True)
+    activateProp4: bpy.props.BoolProperty(name = "Activate4", description = "activate4", default = True)
+    activateProp5: bpy.props.BoolProperty(name = "Activate5", description = "activate5", default = True)
     
-    # Additional buttons displayed on the node.
+    propList = []
+    socketList = []
+   
+    def init(self, context):
+        if not self.propList:
+            self.declareProperties(self.propList)
+        if not self.socketList:
+            self.declareCheckedSockets(self.socketList)
+        
+        self.init_sockets_checked(context,self.socketList)        
+        super().init(context)
+
     def draw_buttons(self, context, layout):
         self.draw_buttons_common(context, layout)
-        
-        layout.prop(self, "type", text="type")
-        layout.prop(self, "width", text="width")
-        layout.prop(self, "height", text="height")
-        layout.prop(self, "shape", text="shape")
+        self.draw_buttons_checked(context, layout, self.propList)
 
     # Optional: custom label
     # Explicit user label overrides this, but here we can define a label dynamically

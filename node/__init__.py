@@ -1,18 +1,40 @@
 import bpy
 
+from ..socket import ProkitekturaCheckedSocketBase
+
+# unchecks all checkboxes of checked attrubutes
+def _clearAllActivationCheckoxes(self,context):
+    for dict in self.propList:
+        setattr(self,dict["check"], False)
+    for inp in (inp for inp in self.inputs if isinstance(inp,ProkitekturaCheckedSocketBase) ):
+        inp.activated = False
+        
+# checks all checkboxes of checked standard attrubutes
+def _defaultAllActivationCheckoxes(self,context):
+    for dict in self.propList:
+        setattr(self,dict["check"], dict["type"]=="std")
+    for text in (socket["text"] for socket in self.socketList if socket["type"]=="std"):
+        for inp in (inp for inp in self.inputs if inp.name == text):
+            inp.activated = True   
+        
+# changes state of node between the types "Node", "Definition" or "Use Definition" 
 def _definitionTypeUpdate(self, context):
     # new color if pure definition
     if self.typeDefinition == "def":
         self.use_custom_color = True
         self.color = (0.0, 0.8, 1.0)
+        _clearAllActivationCheckoxes(self,context)
     elif self.typeDefinition == "usedef":
         self.use_custom_color = True
         self.color = (0.0, 0.4, 0.5)
+        _clearAllActivationCheckoxes(self,context)
     else:
         self.use_custom_color = False
+        _defaultAllActivationCheckoxes(self,context)
        
     return
 
+# searches for all instances of nodes of type "Definition"
 def _searchDefinitionItems(self,context):
     if self.typeDefinition == "usedef":
         tree = context.space_data.edit_tree
@@ -24,10 +46,20 @@ def _searchDefinitionItems(self,context):
         defNodesList = []
     return defNodesList
 
+# toggles visibility of advanced properties depending of the state of the "Show Advanced" property
 def _setAdvanced(self,context):
     for text in (socket["text"] for socket in self.socketList if socket["type"]=="adv"):
         for inp in (inp for inp in self.inputs if inp.name == text):
-            inp.hide = not self.showAdvanced    
+            inp.hide = not self.showAdvanced   
+
+# shows or hides the symmetryFlip property of the ProkitekturaContainerNode depending on the symmetry property state     
+def  _updateSymmetry(self,context):
+    flip_index = next((index for (index, d) in enumerate(self.propList) if d["name"] == "symmetryFlip"), None)
+    if self.symmetry != "no":
+        self.propList[flip_index]["type"] = "std"
+    else:
+        self.propList[flip_index]["type"] = "hidden"
+            
 
 
 # Derived from the Node base type.
@@ -113,7 +145,8 @@ class ProkitekturaNode:
     
     def draw_buttons_checked(self, context, layout, propList):
         col = layout.column(align=True)
-        box = layout.column(align=True).box() if self.showAdvanced else None
+        hasAdvancedProperties = len([prop for prop in propList if prop["type"]=="adv"])>0
+        box = layout.column(align=True).box() if self.showAdvanced and hasAdvancedProperties else None
         for prop in propList:
             if prop["type"]=="std":
                 row = col.row()
@@ -121,12 +154,13 @@ class ProkitekturaNode:
                 column = row.column()
                 column.enabled = getattr(self, prop["check"])
                 column.prop(self, prop["name"], text=prop["text"])
-            elif box:
+            elif box and prop["type"]=="adv":
                 row = box.row()
                 row.prop(self, prop["check"], text="use")
                 column = row.column()
                 column.enabled = getattr(self, prop["check"])
                 column.prop(self, prop["name"], text=prop["text"])
+            # else prop["type"]=="hidden"  --> do nothing
                 
     def init_sockets_checked(self,context,socketList):
         for socket in socketList:
@@ -152,7 +186,17 @@ class ProkitekturaContainerNode(ProkitekturaNode):
     """
     Mix-in class for container nodes (Div, Layer, Basement, RoofSide, Ridge)
     """
+    def declareProperties(self, propList):
+        super().declareProperties(propList)
+        propList.extend((
+            {"type":"std", "name":"symmetry",     "check":"activateSym",     "text":"symmetry",         "pythName":"symmetry" },
+            {"type":"hidden", "name":"symmetryFlip", "check":"activateSymFlip", "text":"flip for symmetry","pythName":"symmetryFlip" }
+        ))
     
+    # list for iteration over advanced properties
+    def declareCheckedSockets(self, socketList):
+        super().declareCheckedSockets(socketList)
+
     symmetryList = (
         ("no", "no", "no symmetry"),
         ("middleOfLast", "middle of last", "relative to the middle of the last item"),
@@ -163,29 +207,19 @@ class ProkitekturaContainerNode(ProkitekturaNode):
         name = "Symmetry",
         description = "Defines if there is a symmetry of items and the center of the symmetry",
         items = symmetryList,
-        default = "no"
+        default = "no",
+        update = _updateSymmetry
     )
     
     symmetryFlip: bpy.props.BoolProperty(
         name = "Flip for Symmetry",
         description = "Flip items on the other side of the center of symmetry to achive the total symmetry or leave the items intact",
-        default = False
+        default = False,
+        options = {'HIDDEN'}
     )
-    
-    #def insert_link(self, link):
-    #    nodeTree = bpy.context.space_data.edit_tree
-    #    nodeFrame = nodeTree.nodes.new('NodeFrame')
-    #    nodeFrame.location = link.to_node.location.copy()
-    #    nodeFrame.select = False
-    #    link.from_node.select = False
-    #    link.to_node.select = True
-    #    bpy.ops.node.translate_attach(TRANSFORM_OT_translate={"value":(30., -30., 0), "release_confirm":True})
-        #bpy.ops.node.translate_attach(TRANSFORM_OT_translate={"value":(30., -30., 0), "constraint_axis":(False, False, False), "constraint_matrix":(1, 0, 0, 0, 1, 0, 0, 0, 1), "constraint_orientation":'GLOBAL', "mirror":True, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "cursor_transform":False, "texture_space":False, "remove_on_cancel":False, "release_confirm":True, "use_accurate":False}, NODE_OT_attach={}, NODE_OT_insert_offset={})
-    def draw_buttons_container(self, context, layout):
-        self.draw_buttons_common(context, layout)
-        self.draw_buttons_symmetry(context, layout)
-    
-    def draw_buttons_symmetry(self, context, layout):
-        layout.prop(self, "symmetry", text="symmetry")
-        if self.symmetry != "no":
-            layout.prop(self, "symmetryFlip", text="flip for symmetry")
+
+    activateSym: bpy.props.BoolProperty(name = "activateSym", description = "activateSym", default = True)
+    activateSymFlip: bpy.props.BoolProperty(name = "activateSymFlip", description = "activateSymFlip", default = True)
+
+
+            
