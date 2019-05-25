@@ -81,9 +81,9 @@ class ProkitekturaCheckedSocketBase(NodeSocket):
             if self.advanced:
                 layout = layout.box()
             col = layout.column(align=True)
-            row = col.row(align=True)
-            row.prop(self, "activated", text="use")
-            column = row.column(align=True)
+            split = col.split(factor=0.2)
+            split.prop(self, "activated", text="use")
+            column = split.column(align=True)
             column.enabled = getattr(self, "activated")
             column.prop(self, "value", text=text)
       

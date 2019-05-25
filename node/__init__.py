@@ -149,18 +149,17 @@ class ProkitekturaNode:
         box = layout.column(align=True).box() if self.showAdvanced and hasAdvancedProperties else None
         for prop in propList:
             if prop["type"]=="std":
-                row = col.row()
-                row.prop(self, prop["check"], text="use")
-                column = row.column()
-                column.enabled = getattr(self, prop["check"])
-                column.prop(self, prop["name"], text=prop["text"])
+                self._drawAttribute(col, prop)
             elif box and prop["type"]=="adv":
-                row = box.row()
-                row.prop(self, prop["check"], text="use")
-                column = row.column()
-                column.enabled = getattr(self, prop["check"])
-                column.prop(self, prop["name"], text=prop["text"])
+                self._drawAttribute(box, prop)
             # else prop["type"]=="hidden"  --> do nothing
+    
+    def _drawAttribute(self, layout, prop):
+        split = layout.row(factor=0.2)
+        split.prop(self, prop["check"], text="use")
+        column = split.column()
+        column.enabled = getattr(self, prop["check"])
+        column.prop(self, prop["name"], text=prop["text"])
                 
     def init_sockets_checked(self,context,socketList):
         for socket in socketList:
