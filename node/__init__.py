@@ -155,7 +155,7 @@ class ProkitekturaNode:
             # else prop["type"]=="hidden"  --> do nothing
     
     def _drawAttribute(self, layout, prop):
-        split = layout.row(factor=0.2)
+        split = layout.split(factor=0.2)
         split.prop(self, prop["check"], text="use")
         column = split.column()
         column.enabled = getattr(self, prop["check"])

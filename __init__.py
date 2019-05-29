@@ -33,6 +33,8 @@ from .node.chimney import ProkitekturaChimney
 
 from .node.demoNode import ProkitekturaDemoAdvancedAttr
 
+from .parsers.code_parser import CodeParser
+
 
 
 ### Node Categories ###
@@ -160,6 +162,48 @@ node_categories = [
     ])   
 ]
 
+class ParseTreeCode(bpy.types.Operator):
+    """Parse the node tree and create Python code"""
+    bl_idname = "blosm_nodes.parse_tree_code"  # important since its how bpy.ops.blender_osm.import_data is constructed
+    bl_label = "Parse Nodes"
+    bl_description = "Parse Nodes"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        tree = context.space_data.edit_tree
+        parser = CodeParser(tree)       
+        pycode = parser.parse()
+        
+        path = "D:/BlenderDev/eclipse-workspace/test_output/parsed.py"
+        file = open(path, "w")
+        file.write( pycode )
+        file.close()
+        return {'FINISHED'}
+
+class BlosmNodesPanel(bpy.types.Panel):
+    bl_idname = "blosm_nodes_settings_panel"
+    bl_label = "Parse"
+    bl_space_type = "NODE_EDITOR"
+    bl_region_type = "UI"
+    bl_category = "Blosm-Nodes"
+
+    @classmethod
+    def poll(cls, context):
+        return True
+        #=======================================================================
+        # tree = cls.getTree()
+        # if tree is None: return False # only display panel when a node group is selected
+        # return tree.bl_idname == "ProkitekturaNodeTree" # only display panel when selected node group is an Mtree node tree
+        #=======================================================================
+
+    def draw(self, context):
+        TheCol = self.layout.column(align=True)
+        TheCol.operator("blosm_nodes.parse_tree_code", text="Python Code")
+
+    @classmethod
+    def getTree(cls):
+        return bpy.context.space_data.edit_tree
+
 
 classes = (
     # operators
@@ -204,8 +248,12 @@ classes = (
     ProkitekturaRidge,
     # Chimney
     ProkitekturaChimney,
+    # DemoAdvancedAttr
     ProkitekturaDemoAdvancedAttr,
-    ProkitekturaSocketEnum
+    ProkitekturaSocketEnum,
+    #parser
+    BlosmNodesPanel,
+    ParseTreeCode
 )
 
 
