@@ -1,5 +1,8 @@
 import bpy
 from bpy.types import NodeTree
+# ExportHelper is a helper class, defines filename and
+# invoke() function which calls the file selector.
+from bpy_extras.io_utils import ExportHelper
 
 from .operator import ProkitekturaOpCreateMarkup
 
@@ -162,23 +165,32 @@ node_categories = [
     ])   
 ]
 
-class ParseTreeCode(bpy.types.Operator):
+
+class ParseTreeCode(bpy.types.Operator, ExportHelper):
     """Parse the node tree and create Python code"""
     bl_idname = "blosm_nodes.parse_tree_code"  # important since its how bpy.ops.blender_osm.import_data is constructed
     bl_label = "Parse Nodes"
     bl_description = "Parse Nodes"
     bl_options = {'REGISTER', 'UNDO'}
+    
+    # ExportHelper mixin class uses this
+    filename_ext = ".py"
+
+    filter_glob: bpy.props.StringProperty(
+        default="*.py",
+        options={'HIDDEN'},
+        maxlen=255,  # Max internal buffer length, longer would be clamped.
+    )
 
     def execute(self, context):
         tree = context.space_data.edit_tree
         parser = CodeParser(tree)       
         pycode = parser.parse()
         
-        path = "D:/BlenderDev/eclipse-workspace/test_output/parsed.py"
-        file = open(path, "w")
-        file.write( pycode )
-        file.close()
+        with open(self.filepath, 'w') as file:
+            file.write( pycode )
         return {'FINISHED'}
+
 
 class BlosmNodesPanel(bpy.types.Panel):
     bl_idname = "blosm_nodes_settings_panel"
