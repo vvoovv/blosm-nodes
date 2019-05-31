@@ -14,9 +14,9 @@ class ProkitekturaFootprint(bpy.types.Node, ProkitekturaNode):
         super().declareCheckedSockets(socketList)
         socketList.extend((
             {"type":"std", "class":"ProkitekturaCheckedSocketIntUnsigned",  "text":"number of levels",  "pythName":"levels"},
-            {"type":"std", "class":"ProkitekturaCheckedSocketIntUnsigned",  "text":"min level",         "pythName":"minLevel"},
-            {"type":"std", "class":"ProkitekturaCheckedSocketIntUnsigned",        "text":"height",            "pythName":"levelHeight"},
-            {"type":"std", "class":"ProkitekturaCheckedSocketRoofShape",    "text":"roof shape",        "pythName":"roofShape"}
+            {"type":"std", "class":"ProkitekturaCheckedSocketRoofShape",    "text":"roof shape",        "pythName":"roofShape"},
+            {"type":"adv", "class":"ProkitekturaCheckedSocketIntUnsigned",  "text":"min level",         "pythName":"minLevel"},
+            {"type":"adv", "class":"ProkitekturaCheckedSocketIntUnsigned",  "text":"height",            "pythName":"levelHeight"}
         ))
 
     propList = []
