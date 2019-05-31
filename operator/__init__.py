@@ -70,3 +70,10 @@ class ProkitekturaOpCreateMarkup(bpy.types.Operator):
             "The parent node must be selected the last one. " +
             "The markup nodes can not be part of existing markup."
         )
+
+
+def menu_func_markup(self, context):
+    self.layout.operator(ProkitekturaOpCreateMarkup.bl_idname, text="Markup")
+
+def menu_func_create_markup(self, context):
+    self.layout.operator(ProkitekturaOpCreateMarkup.bl_idname, text="Create Markup")

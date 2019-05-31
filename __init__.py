@@ -4,7 +4,7 @@ from bpy.types import NodeTree
 # invoke() function which calls the file selector.
 from bpy_extras.io_utils import ExportHelper
 
-from .operator import ProkitekturaOpCreateMarkup
+from .operator import ProkitekturaOpCreateMarkup, menu_func_markup, menu_func_create_markup
 
 from .socket import ProkitekturaSocketMarkup, ProkitekturaSocketCondition, ProkitekturaCheckedSocketBase, \
                     ProkitekturaCheckedSocketIntUnsigned, ProkitekturaCheckedSocketFloat, ProkitekturaCheckedSocketFloatUnsigned,\
@@ -275,8 +275,8 @@ def register():
         register_class(cls)
 
     nodeitems_utils.register_node_categories('PROKITEKTURA_NODES', node_categories)
-    bpy.types.Scene.prop_group = PointerProperty(type=Group)
-
+    bpy.types.NODE_MT_context_menu.append(menu_func_create_markup)
+    bpy.types.NODE_MT_add.append(menu_func_markup)
 
 
 def unregister():
@@ -285,7 +285,8 @@ def unregister():
     from bpy.utils import unregister_class
     for cls in reversed(classes):
         unregister_class(cls)
-    del bpy.types.Scene.prop_group
+    bpy.types.NODE_MT_context_menu.remove(menu_func_create_markup)
+    bpy.types.NODE_MT_add.remove(menu_func_markup)
 
 
 if __name__ == "__main__":
