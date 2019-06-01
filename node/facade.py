@@ -12,10 +12,10 @@ class ProkitekturaFacade(ProkitekturaContainerNode, bpy.types.Node):
     
     # list for iteration over advanced properties
     def declareProperties(self, propList):
-        super().declareProperties(propList)
         propList.extend((
             {"type":"std", "name":"facadeType","check":"activatefacadeType", "text":"type", "pythName":"facadeType" },
         ))
+        super().declareProperties(propList)
 
     def declareCheckedSockets(self, socketList):
         super().declareCheckedSockets(socketList)

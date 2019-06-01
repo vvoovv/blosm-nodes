@@ -16,10 +16,10 @@ class ProkitekturaWindow(bpy.types.Node, ProkitekturaNode):
         super().declareProperties(propList)
         propList.extend((
             {"type":"std",    "name":"type",       "check":"activateProp1", "text":"type",       "pythName":"type" },
+            {"type":"std",    "name":"shape",      "check":"activateProp5", "text":"shape",      "pythName":"shape" },
             {"type":"std",    "name":"width",      "check":"activateProp2", "text":"width",      "pythName":"width" },
             {"type":"std",    "name":"height",     "check":"activateProp3", "text":"height",     "pythName":"height" },
-            {"type":"hidden", "name":"panelsRow1", "check":"activateProp4", "text":"panelsRow1", "pythName":"panels" },
-            {"type":"std",    "name":"shape",      "check":"activateProp5", "text":"shape",      "pythName":"shape" }
+            {"type":"hidden", "name":"panelsRow1", "check":"activateProp4", "text":"panelsRow1", "pythName":"panels" }
         ))
  
     typeList = (

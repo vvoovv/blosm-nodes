@@ -25,12 +25,12 @@ class ProkitekturaLevel(bpy.types.Node, ProkitekturaContainerNode):
     
     # list for iteration over advanced properties
     def declareProperties(self, propList):
-        super().declareProperties(propList)
         propList.extend((
             {"type":"std",    "name":"levelOptions",    "check":"activateProp2", "text":"levels",             "pythName":"strProp" },
             {"type":"std",    "name":"countGroundLevel","check":"activateProp1", "text":"count ground level", "pythName":"groundLevel" },
             {"type":"hidden", "name":"specificLevel",   "check":"activateProp3", "text":"level number",       "pythName":"index" }
         ))
+        super().declareProperties(propList)
 
     def declareCheckedSockets(self, socketList):
         super().declareCheckedSockets(socketList)
