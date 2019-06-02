@@ -14,7 +14,7 @@ class CodeParser():
         self.tree = tree
 
     def parse(self):
-        #s tyles definition
+        #styles definition
         pycode = "styles = {\n"
         pycode += "\"" + self.tree.name + "\": ["
         comma = "\n"
@@ -43,42 +43,8 @@ class CodeParser():
         pycode += "\n]\n}\n"
     
         return pycode
- 
-    def resolveInputLink(self,socket):
-        return socket.value # not yet implemented !!!!!!!!!!!!!
 
-    def parseValue(self, value):
-        if isinstance(value,str):
-            return "\"" + value + "\""
-        elif isinstance(value,Color):
-            return "(" + str(value.r) + "," + str(value.g) + "," + str(value.b) + ")"
-        else:
-            return str(value)
-
-    def parseSocketValue(self,socket):
-        if socket.is_linked:
-            value = resolveInputLink(socket)
-        else:
-            value = socket.value
-        return self.parseValue(value)
-
-    def parseMarkupNodes(self,markupSocket,indnt):
-        comma = "\n"
-        pycode = ""
-
-        # find ReRoute node
-        reRouteNode = markupSocket.links[0].to_node
-        markupFrameNode = reRouteNode.parent
-        nodesInFrame = [node for node in self.tree.nodes if node.parent == markupFrameNode and isinstance(node,ProkitekturaNode)]
-        
-        # sort them somwhow according position (not yet implemented)
-
-        for node in nodesInFrame:
-            pycode += comma + self.parseNode(node, indnt)
-            comma = ",\n"
-
-        return pycode
-
+    # parse attributes of node (definitions, label, properties, input sockets and markup)
     def parseNode(self,node,indnt):
         # write node label
         pycode = indent(indnt) + node.bl_label + "("
@@ -93,7 +59,8 @@ class CodeParser():
         if node.typeDefinition == "usedef":
             pycode += comma + indent(indnt+1) + "use = [\"" + node.defName + "\"]"
             comma = ",\n"  
-            
+        
+        # label, if any   
         if len(node.label) > 0:
             pycode += comma + indent(indnt+1) + "label = \"" + node.label + "\""
             comma = ",\n"  
@@ -103,8 +70,15 @@ class CodeParser():
         if len(propList)>0:
             for entry in propList:
                 if getattr(node,entry["check"]):
-                    pycode += comma + indent(indnt+1) + entry["pythName"] + " = " + self.parseValue(getattr(node,entry["name"]))
-                    comma = ",\n"
+                    if entry["name"] == "facadeType":
+                        value = getattr(node,entry["name"])
+                        if value != "all":
+                            pycode += comma + indent(indnt+1) + "condition = lambda facade: facade." + value
+                            comma = ",\n"
+                        # else: ommit condition
+                    else:
+                        pycode += comma + indent(indnt+1) + entry["pythName"] + " = "  + self.parseValue(getattr(node,entry["name"]))
+                        comma = ",\n"
    
         # parse node input sockets
         socketList = node.socketList
@@ -125,5 +99,45 @@ class CodeParser():
    
         pycode += "\n" + indent(indnt) + ")"
         return pycode
+ 
+     # convert attributes to strings, according to their type
+    def parseValue(self, value):
+        if isinstance(value,str):
+            return "\"" + value + "\""
+        elif isinstance(value,Color):
+            return "(" + str(value.r) + "," + str(value.g) + "," + str(value.b) + ")"
+        else:
+            return str(value)
+
+    # parse value of input socket
+    def parseSocketValue(self,socket):
+        if socket.is_linked:
+            value = resolveInputLink(socket)
+        else:
+            value = socket.value
+        return self.parseValue(value)
+    
+    # follow input link for linked sockets (pass NodeReroutes, if any)
+    def resolveInputLink(self,socket):
+        return socket.value # not yet implemented !!!!!!!!!!!!!
+
+    # parse markup
+    def parseMarkupNodes(self,markupSocket,indnt):
+        comma = "\n"
+        pycode = ""
+
+        # find ReRoute node
+        reRouteNode = markupSocket.links[0].to_node
+        markupFrameNode = reRouteNode.parent
+        nodesInFrame = [node for node in self.tree.nodes if node.parent == markupFrameNode and isinstance(node,ProkitekturaNode)]
+        
+        # sort them somwhow according position (not yet implemented)
+
+        for node in nodesInFrame:
+            pycode += comma + self.parseNode(node, indnt)
+            comma = ",\n"
+
+        return pycode
+
 
 
