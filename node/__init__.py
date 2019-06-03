@@ -55,10 +55,12 @@ def _setAdvanced(self,context):
 # shows or hides the symmetryFlip property of the ProkitekturaContainerNode depending on the symmetry property state     
 def  _updateSymmetry(self,context):
     flip_index = next((index for (index, d) in enumerate(self.propList) if d["name"] == "symmetryFlip"), None)
-    if self.symmetry != "no":
+    if self.symmetry != "None":
         self.propList[flip_index]["type"] = "std"
+        self.activateSymFlip = self.activateSym
     else:
         self.propList[flip_index]["type"] = "hidden"
+        self.activateSymFlip = False
             
 
 
@@ -197,16 +199,16 @@ class ProkitekturaContainerNode(ProkitekturaNode):
         super().declareCheckedSockets(socketList)
 
     symmetryList = (
-        ("no", "no", "no symmetry"),
-        ("middleOfLast", "middle of last", "relative to the middle of the last item"),
-        ("rightmostOfLast", "rightmost of Last", "relative to the rightmost end of the last item")
+        ("None", "no", "no symmetry"),
+        ("MiddleOfLast", "middle of last", "relative to the middle of the last item"),
+        ("RightmostOfLast", "rightmost of Last", "relative to the rightmost end of the last item")
     )
     
     symmetry: bpy.props.EnumProperty(
         name = "Symmetry",
         description = "Defines if there is a symmetry of items and the center of the symmetry",
         items = symmetryList,
-        default = "no",
+        default = "None",
         update = _updateSymmetry
     )
     
@@ -218,7 +220,7 @@ class ProkitekturaContainerNode(ProkitekturaNode):
     )
 
     activateSym: bpy.props.BoolProperty(name = "activateSym", description = "activateSym", default = True)
-    activateSymFlip: bpy.props.BoolProperty(name = "activateSymFlip", description = "activateSymFlip", default = True)
+    activateSymFlip: bpy.props.BoolProperty(name = "activateSymFlip", description = "activateSymFlip", default = False)
 
 
             

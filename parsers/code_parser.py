@@ -70,12 +70,19 @@ class CodeParser():
         if len(propList)>0:
             for entry in propList:
                 if getattr(node,entry["check"]):
+                    # special code for facadeType
                     if entry["name"] == "facadeType":
                         value = getattr(node,entry["name"])
                         if value != "all":
                             pycode += comma + indent(indnt+1) + "condition = lambda facade: facade." + value
                             comma = ",\n"
                         # else: ommit condition
+                    # special code for symmetry
+                    elif entry["name"] == "symmetry":
+                        value = getattr(node,entry["name"])
+                        pycode += comma + indent(indnt+1) + "symmetry = symmetry." + value
+                        comma = ",\n"
+                    #standard property
                     else:
                         pycode += comma + indent(indnt+1) + entry["pythName"] + " = "  + self.parseValue(getattr(node,entry["name"]))
                         comma = ",\n"
@@ -99,7 +106,7 @@ class CodeParser():
    
         pycode += "\n" + indent(indnt) + ")"
         return pycode
- 
+    
      # convert attributes to strings, according to their type
     def parseValue(self, value):
         if isinstance(value,str):
