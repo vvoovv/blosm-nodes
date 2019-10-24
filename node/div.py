@@ -12,10 +12,10 @@ class ProkitekturaDiv(ProkitekturaContainerNode,bpy.types.Node):
 
     # list for iteration over advanced properties
     def declareProperties(self, propList):
-        super().declareProperties(propList)
         propList.extend((
             {"type":"std", "name":"arrangement","check":"activateArrangement", "text":"arrangement", "pythName":"arrangement" },
         ))
+        super().declareProperties(propList)
 
     # list for iteration over advanced properties
     def declareCheckedSockets(self, socketList):
