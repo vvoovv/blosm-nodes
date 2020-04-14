@@ -1,6 +1,5 @@
 import bpy
 from bpy.types import NodeSocket
-from _testcapi import the_number_three
 
 
 class ProkitekturaSocketMarkup(NodeSocket):
